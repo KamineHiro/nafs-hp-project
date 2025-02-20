@@ -1,0 +1,126 @@
+"use client"
+
+import { motion, useScroll, useTransform } from "framer-motion"
+import { Menu, X } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+
+export default function Navigation() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
+  const { scrollY } = useScroll()
+
+  // スクロールに応じて背景色を変更
+  const backgroundColor = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
+  )
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const menuItems = [
+    { href: "/", label: "ホーム" },
+    { href: "/courses", label: "コース" },
+    { href: "/about", label: "学校について" },
+    { href: "/news", label: "最新記事" },
+    { href: "/downloads", label: "書類ダウンロード" },
+    { href: "/contact", label: "お問い合わせ" },
+  ]
+
+  return (
+    <motion.nav
+      style={{ backgroundColor }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        hasScrolled ? "shadow-md backdrop-blur-md" : ""
+      }`}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-20">
+          {/* ロゴ */}
+          <Link href="/" className="flex items-center space-x-3">
+            <div className="relative w-12 h-12">
+              <Image
+                src="/images/logo.png"
+                alt="NAFS Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span className={`text-xl font-bold ${
+              hasScrolled ? "text-gray-800" : "text-gray-900"
+            }`}>
+              NAFS
+            </span>
+          </Link>
+
+          {/* デスクトップメニュー */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative group py-2 ${
+                  hasScrolled ? "text-gray-600" : "text-gray-800"
+                } hover:text-primary-color transition-colors`}
+              >
+                {item.label}
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-color transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+              </Link>
+            ))}
+          </div>
+
+          {/* ハンバーガーメニューボタン */}
+          <button
+            className={`lg:hidden p-2 focus:outline-none ${
+              hasScrolled ? "text-gray-800" : "text-gray-900"
+            }`}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="メニュー"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+      </div>
+
+      {/* モバイルメニュー */}
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.2 }}
+          className="lg:hidden absolute top-20 inset-x-0 bg-white shadow-lg"
+        >
+          <div className="container mx-auto px-4 py-4">
+            {menuItems.map((item, index) => (
+              <motion.div
+                key={item.href}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Link
+                  href={item.href}
+                  className="block py-3 text-gray-700 hover:text-primary-color hover:bg-gray-50 px-4 rounded-lg transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </motion.nav>
+  )
+}
+
