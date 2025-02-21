@@ -6,97 +6,265 @@ import Image from "next/image"
 import Link from "next/link"
 
 export default function Home() {
+  const features = [
+    {
+      title: "理念方針",
+      description: "「学ぶ」を重んじ、「できる」を叶える",
+      icon: "/images/philosophy.svg",
+      link: "/about"
+    },
+    {
+      title: "コース紹介",
+      description: "進学1年6か月コース、進学2年コース",
+      icon: "/images/course.svg",
+      link: "/courses"
+    },
+    {
+      title: "自然な日本語",
+      description: "自然な日本語というのは何でしょうか",
+      icon: "/images/japanese.svg",
+      link: "/about"
+    }
+  ]
+
   return (
-    <div className="min-h-screen">
+    <main>
       {/* ヒーローセクション */}
-      <section className="relative h-[600px] md:h-screen overflow-hidden">
-        <Image 
-          src="/images/community.jpg"
-          alt="日琉国際言語学院のキャンパス"
-          width={1920}
-          height={1080}
+      <section className="relative h-screen">
+        <Image
+          src="/images/hero.jpg"
+          alt="学生たちの笑顔"
+          fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-transparent">
-          <div className="container mx-auto h-full flex flex-col items-center justify-center text-white px-4">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-up">
-              NAFS
-            </h1>
-            <p className="text-xl md:text-3xl font-light tracking-wider animate-fade-in-up-delay">
+        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
               日琉国際言語学院
+            </h1>
+            <p className="text-lg md:text-xl mb-2">
+              日本語教育機関
             </p>
+            <div className="flex gap-4 justify-center mt-12">
+              <Link
+                href="/contact"
+                className="bg-[#FFD700] text-black px-8 py-3 rounded-lg hover:opacity-90 transition-opacity font-bold"
+              >
+                職員採用情報
+              </Link>
+              <Link
+                href="/about"
+                className="bg-white text-black px-8 py-3 rounded-lg hover:opacity-90 transition-opacity font-bold"
+              >
+                学校について
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* 特徴セクション */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Link 
+                key={index} 
+                href={feature.link}
+                className="group"
+              >
+                <div className="bg-white p-8 rounded-lg text-center transition-transform hover:-translate-y-1">
+                  <div className="w-16 h-16 mx-auto mb-6 text-primary-color">
+                    <Image
+                      src={feature.icon}
+                      alt={feature.title}
+                      width={64}
+                      height={64}
+                      className="text-primary-color"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.description}</p>
+                  <div className="mt-6 text-primary-color">
+                    詳しく見る
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 入学案内セクション */}
+      <section className="relative">
+        <div className="grid md:grid-cols-2 items-stretch">
+          {/* 左側：桜の画像 */}
+          <div className="relative h-[600px]">
+            <Image
+              src="/images/sakura.jpg"
+              alt="桜の風景"
+              fill
+              className="object-cover"
+            />
+          </div>
+          
+          {/* 右側：テキストコンテンツ */}
+          <div className="space-y-6 bg-[#FFF9E5] p-12">
+            <h2 className="text-3xl font-bold">入学案内</h2>
+            
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-bold mb-4">在留資格「留学」について</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  海外に居住しており、進学1年6か月コースまたは進学2年コースを申請する学生は、在留資格「留学」（中長期在留資格）の申請が必要となります。1年6か月コースの入学時期は毎年10月、2年コースは毎年4月です。各種留学資料の準備は半年前から始めるのがお勧めです。
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-4">日本在住の方について</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  在留資格「留学」の新規申請が不要な方は、既に日本で在留資格「留学」を保持している方、あるいはその他日本での在留資格（例：投資・経営、家族滞在、その他の在留資格）を保持している方を指します。入学時期や問い合わせについては、いつでも学校に問い合わせることができます。
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/admission"
+              className="inline-block bg-[#FFD700] text-black px-6 py-3 rounded-lg hover:opacity-90 transition-opacity font-bold"
+            >
+              詳しく見る
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 学校最新ニュース */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">学校最新ニュース</h2>
+          <p className="text-center text-gray-600 mb-12">学校の最新ニュースをたくさん見てください♪</p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* ニュースカード1 */}
+            <Link href="/news/1" className="group">
+              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="relative h-48">
+                  <Image
+                    src="/images/news1.jpg"
+                    alt="年末パーティー"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-xl mb-2">2021年　年末パーティー</h3>
+                  <p className="text-gray-600 text-sm">こんにちは、皆さんです(*^▽^*)12月17日は今年...</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* ニュースカード2 */}
+            <Link href="/news/2" className="group">
+              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="relative h-48">
+                  <Image
+                    src="/images/news2.jpg"
+                    alt="清掃活動"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-xl mb-2">糸満市町端区 定例清掃活動</h3>
+                  <p className="text-gray-600 text-sm">こんにちは、皆さんです(*^▽^*)今月の25日に...</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* ニュースカード3 */}
+            <Link href="/news/3" className="group">
+              <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div className="relative h-48">
+                  <Image
+                    src="/images/news3.jpg"
+                    alt="JLPT試験"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-xl mb-2">JLPT試験 表彰式</h3>
+                  <p className="text-gray-600 text-sm">こんにちは、皆さんです(*^▽^*)本日、昨年の12...</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 学校の教職員 */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 gradient-text">
-            充実した学習環境
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* 特徴1 */}
-            <div className="card p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 text-primary-color">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
+          <h2 className="text-3xl font-bold text-center mb-4">学校の教職員</h2>
+          <p className="text-center text-gray-600 mb-12">笑顔あふれる教職員がたくさんいます。</p>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            {staffMembers.map((staff, index) => (
+              <div key={index} className="text-center">
+                <div className="relative h-64 mb-4 overflow-hidden rounded-lg">
+                  <Image
+                    src={staff.image}
+                    alt={`${staff.name}先生`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h3 className="font-bold text-lg mb-1">{staff.name}</h3>
+                <p className="text-gray-600">{staff.role}</p>
               </div>
-              <h3 className="text-xl font-bold mb-4">経験豊富な講師陣</h3>
-              <p className="text-gray-600">
-                日本語教育の専門家が、一人ひとりの学習をサポートします。
-              </p>
-            </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* 特徴2 */}
-            <div className="card p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 text-primary-color">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-4">少人数制クラス</h3>
-              <p className="text-gray-600">
-                きめ細やかな指導を実現する少人数制のクラス編成です。
-              </p>
-            </div>
-
-            {/* 特徴3 */}
-            <div className="card p-8 text-center">
-              <div className="w-16 h-16 mx-auto mb-6 text-primary-color">
-                <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-4">充実した生活サポート</h3>
-              <p className="text-gray-600">
-                住居や生活面でのサポート体制も整っています。
-              </p>
+      {/* 紹介動画セクション */}
+      <section className="py-20 bg-[#FFF9E5]">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-4">学校紹介動画</h2>
+          <p className="text-center text-gray-600 mb-12">日琉国際言語学院の雰囲気をご覧ください</p>
+          
+          <div className="flex justify-center">
+            <div className="relative w-[800px] h-[450px] rounded-lg overflow-hidden shadow-lg">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/idCdOfknmO8"
+                title="日琉国際言語学院紹介動画"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTAセクション */}
-      <section className="py-20 bg-gray-50 mb-20">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8">
-            あなたの夢への第一歩を、私たちと共に
-          </h2>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
-            日本での留学生活を充実したものにするため、私たちがしっかりとサポートします。
-          </p>
-          <Link
-            href="/contact"
-            className="btn btn-primary text-lg px-8 py-4 hover:shadow-lg"
-          >
-            お問い合わせはこちら
-          </Link>
+      {/* ドラゴンボートレースセクション */}
+      <section className="relative h-[600px] bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/images/dragon-boat.jpg')" }}>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative container mx-auto px-4 h-full flex items-center">
+          <div className="max-w-4xl">
+            <p className="text-lg leading-relaxed mb-6 text-[#FFD700]">
+              学校の所在地糸満市は中国との長い歴史があり、中国と同様に毎年糸満ハーレー（ドラゴンボートレース）が開催されています。伝統的な行事に学生も積極的に参加できるよう努めていります。この活動は伝統文化を継承し、学生のチームワーク精神とスポーツマンシップを養うことを目的とした教育活動の重要な一部であると考えております。
+            </p>
+            <p className="text-lg leading-relaxed text-[#FFD700]">
+              糸満ハーレーは単なるスポーツイベントではなく、文化遺産であり、友情の象徴でもあります。当校は、この活動を通じて学生が地元の文化を体験できることを期待しております。
+            </p>
+          </div>
         </div>
       </section>
-    </div>
+    </main>
   )
 }
 
@@ -113,5 +281,49 @@ const activities = [
     title: "地域活性化",
     description: "地域の資源を活かした持続可能な地域づくりを支援しています。",
   },
+]
+
+// 教職員データ
+const staffMembers = [
+  {
+    name: "ゆりえ",
+    role: "日本語教師",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "るな",
+    role: "日本語教師",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "きんい",
+    role: "生活指導",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "あきら",
+    role: "事務員",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "しんしん",
+    role: "教務主任",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "まこ",
+    role: "日本語教師",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "なつき",
+    role: "日本語教師",
+    image: "/images/sample.jpg"
+  },
+  {
+    name: "れいな",
+    role: "生活指導",
+    image: "/images/sample.jpg"
+  }
 ]
 

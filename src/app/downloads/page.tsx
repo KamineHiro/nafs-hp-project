@@ -1,116 +1,126 @@
 import React from 'react';
+import Image from 'next/image'
+import Link from 'next/link'
 
-const documents = [
+const downloadCategories = [
   {
-    category: '入学資料',
+    title: "入学資料",
+    icon: "/images/admission-icon.svg",
     items: [
       {
-        title: '募集要項',
-        description: '入学に必要な情報が記載された募集要項です。',
-        url: '/documents/admission-guide.pdf'
+        name: "募集要項（日本語）",
+        path: "/documents/admission/requirements.pdf",
+        size: "2.1 MB",
+        format: "PDF"
       }
     ]
   },
   {
-    category: '定期報告',
+    title: "定期報告",
+    icon: "/images/report-icon.svg",
     items: [
       {
-        title: '自己点検・評価報告書',
-        description: '学校の自己点検および評価に関する報告書です。',
-        url: '/documents/self-evaluation.pdf'
+        name: "自己点検・評価報告書（2023年度）",
+        path: "/documents/reports/self-evaluation.pdf",
+        size: "1.8 MB",
+        format: "PDF"
       },
       {
-        title: '課程修了者の日本語能力習得状況等',
-        description: '修了生の日本語能力に関する報告書です。',
-        url: '/documents/japanese-proficiency-report.pdf'
+        name: "日本語能力判定状況（2023年度）",
+        path: "/documents/reports/japanese-ability.pdf",
+        size: "1.2 MB",
+        format: "PDF"
       }
     ]
   },
   {
-    category: 'パンフレット等',
+    title: "パンフレット等",
+    icon: "/images/pamphlet-icon.svg",
     items: [
       {
-        title: 'パンフレット（日本語・英語）',
-        description: '学校案内のパンフレット（日本語・英語版）です。',
-        url: '/documents/brochure-jp-en.pdf'
+        name: "学校案内（日本語・英語）",
+        path: "/documents/pamphlets/pamphlet-en.pdf",
+        size: "3.5 MB",
+        format: "PDF"
       },
       {
-        title: 'パンフレット（日本語・中国語）',
-        description: '学校案内のパンフレット（日本語・中国語版）です。',
-        url: '/documents/brochure-jp-cn.pdf'
+        name: "学校案内（日本語・中国語）",
+        path: "/documents/pamphlets/pamphlet-cn.pdf",
+        size: "3.5 MB",
+        format: "PDF"
       }
     ]
   }
-];
+]
 
 export default function Downloads() {
   return (
-    <div className="container mx-auto px-4 pt-20">
-      <h1 className="text-3xl font-bold mb-8 gradient-text">書類ダウンロード</h1>
-
-      <div className="space-y-12">
-        {documents.map((section, index) => (
-          <section key={index} className="card p-8">
-            <h2 className="text-2xl font-bold mb-6">{section.category}</h2>
-            <div className="grid gap-6">
-              {section.items.map((doc, docIndex) => (
-                <div 
-                  key={docIndex} 
-                  className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <h3 className="font-bold text-lg">{doc.title}</h3>
-                      <p className="text-gray-600">{doc.description}</p>
-                    </div>
-                    <a
-                      href={doc.url}
-                      className="btn btn-primary flex items-center gap-2"
-                      download
-                    >
-                      <svg 
-                        className="w-5 h-5" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                        />
-                      </svg>
-                      ダウンロード
-                    </a>
-                  </div>
-                </div>
-              ))}
+    <div className="min-h-screen">
+      {/* ヘッダー画像 */}
+      <div className="relative h-[400px] overflow-hidden">
+        <Image
+          src="/images/downloads-hero.jpg"
+          alt="書類ダウンロード"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">書類ダウンロード</h1>
+            <div className="flex items-center justify-center space-x-2 text-sm">
+              <Link href="/" className="hover:text-primary-color transition-colors">
+                ホーム
+              </Link>
+              <span>›</span>
+              <span>書類ダウンロード</span>
             </div>
-          </section>
-        ))}
+          </div>
+        </div>
       </div>
 
-      {/* 注意事項 */}
-      <div className="mt-12 p-6 bg-gray-50 rounded-lg">
-        <h2 className="text-xl font-bold mb-4">ダウンロードに関する注意事項</h2>
-        <ul className="list-disc list-inside text-gray-600 space-y-2">
-          <li>各書類はPDF形式でダウンロードできます。</li>
-          <li>PDFファイルの閲覧にはAdobe Readerなどのソフトウェアが必要です。</li>
-          <li>書類の内容は予告なく変更される場合があります。</li>
-        </ul>
-      </div>
-
-      {/* お問い合わせ */}
-      <div className="text-center mt-12">
-        <p className="text-lg mb-4">書類についてご不明な点がございましたら、お気軽にお問い合わせください。</p>
-        <a 
-          href="/contact" 
-          className="btn btn-primary inline-block hover:shadow-lg"
-        >
-          お問い合わせはこちら
-        </a>
-      </div>
+      {/* ダウンロードセクション */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-12">
+            {downloadCategories.map((category, index) => (
+              <div key={index} className="text-center">
+                <div className="mb-6">
+                  <Image
+                    src={category.icon}
+                    alt={category.title}
+                    width={64}
+                    height={64}
+                    className="mx-auto text-[#FFD700]"
+                  />
+                </div>
+                <h2 className="text-2xl font-bold mb-6">{category.title}</h2>
+                <div className="space-y-4">
+                  {category.items.map((item, itemIndex) => (
+                    <Link
+                      key={itemIndex}
+                      href={item.path}
+                      className="block bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all hover:bg-gray-50 text-gray-600"
+                    >
+                      <span className="flex items-center justify-between">
+                        <span className="flex items-center">
+                          <svg className="w-5 h-5 mr-2 text-[#FFD700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                          </svg>
+                          {item.name}
+                        </span>
+                        <span className="text-sm text-gray-400">
+                          {item.size} • {item.format}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 } 
