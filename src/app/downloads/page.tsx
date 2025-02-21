@@ -65,15 +65,15 @@ export default function Downloads() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <div className="text-center text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">書類ダウンロード</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">書類ダウンロード</h1>
             <div className="flex items-center justify-center space-x-2 text-sm">
-              <Link href="/" className="hover:text-primary-color transition-colors">
+              <Link href="/" className="text-white hover:text-[#FFD700] transition-colors">
                 ホーム
               </Link>
-              <span>›</span>
-              <span>書類ダウンロード</span>
+              <span className="text-white">›</span>
+              <span className="text-white">書類ダウンロード</span>
             </div>
           </div>
         </div>

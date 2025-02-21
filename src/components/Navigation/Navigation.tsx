@@ -46,7 +46,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-20">
           {/* ロゴ */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="relative w-12 h-12">
+            <div className="relative w-14 h-14">
               <Image
                 src="/images/logo.png"
                 alt="NAFS Logo"
@@ -55,8 +55,8 @@ export default function Navigation() {
                 priority
               />
             </div>
-            <span className={`text-xl font-bold ${
-              hasScrolled ? "text-gray-800" : "text-gray-900"
+            <span className={`text-2xl font-bold ${
+              hasScrolled ? "text-gray-800" : "text-white"
             }`}>
               NAFS
             </span>
@@ -68,12 +68,12 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative group py-2 ${
-                  hasScrolled ? "text-gray-600" : "text-gray-800"
-                } hover:text-primary-color transition-colors`}
+                className={`relative group py-2 text-lg ${
+                  hasScrolled ? "text-gray-800" : "text-white"
+                } hover:text-[#FFD700] transition-colors`}
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-color transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FFD700] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             ))}
           </div>
@@ -81,12 +81,12 @@ export default function Navigation() {
           {/* ハンバーガーメニューボタン */}
           <button
             className={`lg:hidden p-2 focus:outline-none ${
-              hasScrolled ? "text-gray-800" : "text-gray-900"
+              hasScrolled ? "text-gray-800" : "text-white"
             }`}
             onClick={() => setIsOpen(!isOpen)}
             aria-label="メニュー"
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
           </button>
         </div>
       </div>
