@@ -5,14 +5,17 @@ import { Menu, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
   const { scrollY } = useScroll()
+  const [backgroundColor, setBackgroundColor] = useState("transparent")
+  const pathname = usePathname()
 
   // スクロールに応じて背景色を変更
-  const backgroundColor = useTransform(
+  const backgroundColorTransform = useTransform(
     scrollY,
     [0, 100],
     ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
@@ -51,8 +54,8 @@ export default function Navigation() {
                 src="/images/logo.png"
                 alt="NAFS Logo"
                 fill
+                sizes="(max-width: 768px) 56px, 56px"
                 className="object-contain"
-                priority
               />
             </div>
             <span className={`text-2xl font-bold ${
@@ -70,10 +73,16 @@ export default function Navigation() {
                 href={item.href}
                 className={`relative group py-2 text-lg ${
                   hasScrolled ? "text-gray-800" : "text-white"
-                } hover:text-[#FFD700] transition-colors`}
+                } hover:text-[#FFD700] transition-colors ${
+                  pathname === item.href ? "text-[#FFD700]" : ""
+                }`}
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#FFD700] transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
+                <span 
+                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#FFD700] transform origin-left transition-transform duration-300 ${
+                    pathname === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`} 
+                />
               </Link>
             ))}
           </div>
@@ -101,16 +110,18 @@ export default function Navigation() {
           className="lg:hidden absolute top-20 inset-x-0 bg-white shadow-lg"
         >
           <div className="container mx-auto px-4 py-4">
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <motion.div
                 key={item.href}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: item.href === pathname ? 0.1 : item.href === "/courses" ? 0.2 : item.href === "/about" ? 0.3 : item.href === "/news" ? 0.4 : item.href === "/downloads" ? 0.5 : 0.6 }}
               >
                 <Link
                   href={item.href}
-                  className="block py-3 text-gray-700 hover:text-primary-color hover:bg-gray-50 px-4 rounded-lg transition-colors"
+                  className={`block py-3 text-gray-700 hover:text-primary-color hover:bg-gray-50 px-4 rounded-lg transition-colors ${
+                    pathname === item.href ? "bg-[#FFD700] text-black" : ""
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
@@ -123,4 +134,3 @@ export default function Navigation() {
     </motion.nav>
   )
 }
-

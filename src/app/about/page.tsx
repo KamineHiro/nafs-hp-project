@@ -6,7 +6,7 @@ export default function About() {
   return (
     <div className="min-h-screen">
       {/* ヘッダー画像 */}
-      <div className="relative h-[400px] overflow-hidden">
+      <div className="relative h-[700px] overflow-hidden">
         <Image
           src="/images/students.jpg"
           alt="学生たち"

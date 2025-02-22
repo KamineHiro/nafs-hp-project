@@ -4,8 +4,36 @@ import { motion } from "framer-motion"
 import { ArrowRight, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useState, useEffect } from 'react'
+
+const heroImages = [
+  {
+    src: "/images/hero/hero1.jpg",
+    alt: "NAFSキャンパス外観"
+  },
+  {
+    src: "/images/hero/hero2.jpg",
+    alt: "授業風景"
+  },
+  {
+    src: "/images/hero/hero3.jpg",
+    alt: "学生生活"
+  }
+]
 
 export default function Home() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      )
+    }, 4000) // 5秒ごとに画像を切り替え
+
+    return () => clearInterval(timer)
+  }, [])
+
   const features = [
     {
       title: "理念方針",
@@ -30,51 +58,68 @@ export default function Home() {
   return (
     <main>
       {/* ヒーローセクション */}
-      <section className="relative h-screen">
-        <Image
-          src="/images/hero.jpg"
-          alt="学生たちの笑顔"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-          <div className="text-center text-white">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              日琉国際言語学院
-            </h1>
-            <p className="text-lg md:text-xl mb-2">
-              日本語教育機関
-            </p>
-            <div className="flex gap-4 justify-center mt-12">
-              <Link
-                href="/contact"
-                className="bg-[#FFD700] text-black px-8 py-3 rounded-lg hover:opacity-90 transition-opacity font-bold"
-              >
-                職員採用情報
-              </Link>
-              <Link
-                href="/about"
-                className="bg-white text-black px-8 py-3 rounded-lg hover:opacity-90 transition-opacity font-bold"
-              >
-                学校について
-              </Link>
-            </div>
+      <section className="relative h-[700px]">
+        {/* スライダー画像 */}
+        {heroImages.map((image, index) => (
+          <div
+            key={image.src}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <Image
+              src={image.src}
+              alt={image.alt}
+              fill
+              priority={index === 0}
+              className="object-cover"
+            />
+            {/* オーバーレイ */}
+            <div className="absolute inset-0 bg-black/40" />
           </div>
+        ))}
+
+        {/* タイトルと説明 */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
+          <div className="relative w-[800px] h-[200px] mb-8">
+            <Image
+              src="/images/title-logo.png"
+              alt="NAFS 日琉国際言語学院"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          <p className="text-2xl md:text-3xl text-center max-w-3xl mx-auto px-4 mt-4">
+            沖縄から世界へ、世界から沖縄へ
+          </p>
+        </div>
+
+        {/* スライダーインジケーター */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all ${
+                index === currentImageIndex ? 'bg-white w-4' : 'bg-white/50'
+              }`}
+              onClick={() => setCurrentImageIndex(index)}
+            />
+          ))}
         </div>
       </section>
 
       {/* 特徴セクション */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 relative">
             {features.map((feature, index) => (
               <Link 
                 key={index} 
                 href={feature.link}
                 className="group"
               >
-                <div className="bg-white p-8 rounded-lg text-center transition-transform hover:-translate-y-1">
+                <div className="bg-white p-8 rounded-lg text-center transition-transform hover:-translate-y-1 relative">
                   <div className="w-16 h-16 mx-auto mb-6 text-primary-color">
                     <Image
                       src={feature.icon}
@@ -89,6 +134,11 @@ export default function Home() {
                   <div className="mt-6 text-primary-color">
                     詳しく見る
                   </div>
+                  
+                  {/* 区切り線（最後のアイテム以外に表示） */}
+                  {index < features.length - 1 && (
+                    <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-2/3 bg-gray-200" />
+                  )}
                 </div>
               </Link>
             ))}

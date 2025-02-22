@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image'
 import Link from 'next/link'
+import { FileDown } from 'lucide-react'
 
 const downloadCategories = [
   {
@@ -118,6 +119,25 @@ export default function Downloads() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* 注意書きセクション */}
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mt-16 max-w-4xl mx-auto">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <FileDown className="h-5 w-5 text-blue-500" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-blue-800">
+                  ダウンロードについて
+                </h3>
+                <div className="mt-2 text-sm text-blue-700">
+                  <p>• クリックすると自動的にPDFファイルがダウンロードされます。</p>
+                  <p>• ファイルの閲覧にはPDFリーダーが必要です。</p>
+                  <p>• 書類の印刷は、A4サイズ・カラーでお願いいたします。</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

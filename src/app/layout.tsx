@@ -1,18 +1,19 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google"
+import { Azeret_Mono, Noto_Sans_JP } from "next/font/google"
 import "@/app/globals.css"
 import Navigation from "@/components/Navigation/Navigation"
 import Footer from "@/components/Footer/Footer"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistSans = Noto_Sans_JP({
   subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: '--font-geist-sans',
 })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geistMono = Azeret_Mono({
   subsets: ["latin"],
+  variable: '--font-geist-mono',
 })
 
 export const metadata: Metadata = {
@@ -44,4 +45,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   )
 }
-
