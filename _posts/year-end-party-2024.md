@@ -4,6 +4,10 @@ excerpt: 'こんにちは、皆さんです(*^▽^*)12月17日は今年...'
 coverImage: '/images/news/sample.jpg'
 date: '2023-12-23'
 categories: ['イベント', 'ニュース']
+author: {
+  name: 'レイナ',
+  image: '/images/home/staff/sample.jpg'
+}
 ---
 
 こんにちは、皆さんです(*^▽^*)

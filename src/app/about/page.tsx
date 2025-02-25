@@ -8,8 +8,8 @@ export default function About() {
       {/* ヘッダー画像 */}
       <div className="relative h-[700px] overflow-hidden">
         <Image
-          src="/images/students.jpg"
-          alt="学生たち"
+          src="/images/about/about-hero.jpg"
+          alt="学校について"
           fill
           className="object-cover"
           priority
@@ -51,7 +51,7 @@ export default function About() {
               <div className="flex flex-col items-center">
                 <div className="relative w-[800px] h-[480px] mb-4">
                   <Image
-                    src="/images/principal.jpg"
+                    src="/images/about/principal.jpg"
                     alt="学院長：兼本 敏"
                     fill
                     className="object-cover rounded-lg"
@@ -86,7 +86,7 @@ export default function About() {
               <div className="order-2 md:order-2">
                 <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
                   <Image
-                    src="/images/classroom-teaching.jpg"
+                    src="/images/about/classroom-teaching.jpg"
                     alt="教室での授業風景"
                     fill
                     className="object-cover"
@@ -100,7 +100,7 @@ export default function About() {
               <div className="order-2 md:order-1">
                 <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-xl">
                   <Image
-                    src="/images/student-guidance.jpg"
+                    src="/images/about/student-guidance.jpg"
                     alt="学生指導の様子"
                     fill
                     className="object-cover"
@@ -130,7 +130,7 @@ export default function About() {
         {/* 背景画像 */}
         <div className="absolute inset-0 bg-black/30">
           <Image
-            src="/images/japanese-pattern.jpg"
+            src="/images/about/japanese-pattern.jpg"
             alt="和室の背景"
             fill
             className="object-cover -z-10 opacity-90"

@@ -18,75 +18,74 @@ export default async function PostPage({
 }: {
   params: { slug: string }
 }) {
-  // タイムスタンプ付きのスラッグを探す
-  const allSlugs = getPostSlugs()
-  const fullSlug = allSlugs.find(s => s.endsWith(`${params.slug}.md`))
-  
-  if (!fullSlug) {
-    notFound()
-  }
-
-  const post = await getPostBySlug(fullSlug.replace(/\.md$/, ''))
-
-  if (!post) {
-    notFound()
-  }
+  const post = await getPostBySlug(params.slug)
+  if (!post) notFound()
 
   return (
     <div className="min-h-screen">
-      {/* サムネイル画像 */}
-      <div className="relative h-[400px]">
+      {/* ヒーローセクション */}
+      <div className="relative h-[700px] overflow-hidden">
         <Image
-          src={post.coverImage}
+          src="/images/news/news-hero.jpg"
           alt={post.title}
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 100vw"
           className="object-cover"
           priority
+          quality={75}
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/60">
+          <div className="container mx-auto px-4 h-full">
+            <div className="flex flex-col justify-center h-full max-w-4xl">
+              {/* 投稿メタ情報 */}
+              <div className="flex items-center gap-4 text-white/80 mb-4">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src={post.author.image}
+                    alt={post.author.name}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  <span>{post.author.name}</span>
+                </div>
+                <span>/</span>
+                <time>{post.date}</time>
+                <span>/</span>
+                <div className="flex items-center gap-2">
+                  {post.categories.map((category: string, index: number) => (
+                    <span key={index} className="bg-[#FFD700] text-black px-3 py-1 rounded-full text-sm">
+                      {category}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {/* タイトル */}
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                {post.title}
+              </h1>
+              {/* パンくず */}
+              <div className="flex items-center space-x-2 text-sm text-white/80">
+                <Link href="/" className="hover:text-[#FFD700] transition-colors">
+                  ホーム
+                </Link>
+                <span>›</span>
+                <Link href="/news" className="hover:text-[#FFD700] transition-colors">
+                  最新記事
+                </Link>
+                <span>›</span>
+                <span>{post.title}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 記事コンテンツ */}
-      <article className="container mx-auto px-4 py-12 -mt-32 relative">
-        <div className="bg-white rounded-lg shadow-lg p-8 md:p-12">
-          <div className="flex items-center gap-2 mb-4">
-            {post.categories.map((category: string, index: number) => (
-              <span 
-                key={index}
-                className="px-3 py-1 bg-[#FFD700] text-black text-sm rounded-full"
-              >
-                {category}
-              </span>
-            ))}
-          </div>
-          <time className="text-gray-500 text-sm">{post.date}</time>
-          <h1 className="text-3xl md:text-4xl font-bold mt-4 mb-8">{post.title}</h1>
-          <div className="prose max-w-none">
-            <ReactMarkdown
-              components={{
-                p: (props) => {
-                  const { node, children } = props as { node: any; children: React.ReactNode }
-                  if (node?.children[0]?.type === 'element' && node.children[0].tagName === 'img') {
-                    return <>{children}</>
-                  }
-                  return <p>{children}</p>
-                },
-                img: ({ src, alt }) => (
-                  <div className="relative h-[400px] my-8">
-                    <Image
-                      src={src || ''}
-                      alt={alt || ''}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 800px"
-                      className="object-contain"
-                    />
-                  </div>
-                ),
-              }}
-            >
-              {post.content}
-            </ReactMarkdown>
+      {/* 記事本文 */}
+      <article className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="prose prose-lg max-w-4xl mx-auto">
+            <ReactMarkdown>{post.content}</ReactMarkdown>
           </div>
         </div>
       </article>

@@ -6,21 +6,21 @@ const courses = [
   {
     id: "advanced-2year",
     title: "進学2年コース",
-    icon: "/images/desk-study.jpg",
+    icon: "/images/course/desk-study1.jpg",
     description: "初級から丁寧に学び、日本語の基礎から応用までじっくり学べます。",
     details: "初級からしっかり学び、日本語熟達者を目指します。"
   },
   {
     id: "advanced-1.5year",
     title: "進学1年6か月コース",
-    icon: "/images/desk-study.jpg",
+    icon: "/images/course/desk-study2.jpg",
     description: "短期間で上級レベルを目指したい方向けのコースです。",
     details: "初級からしっかり学び、日本語熟達者を目指します。"
   },
   {
     id: "private",
     title: "プライベートレッスン",
-    icon: "/images/private-lesson.jpg",
+    icon: "/images/course/private-lesson.jpg",
     description: "自分のペースで自由に日本語を勉強することができます。",
     details: "自分のペースで自由に日本語を勉強することができます。"
   }
@@ -32,8 +32,8 @@ export default function Courses() {
       {/* ヘッダー画像 */}
       <div className="relative h-[700px] overflow-hidden">
         <Image
-          src="/images/classroom.jpg"
-          alt="教室の様子"
+          src="/images/course/courses-hero.jpg"
+          alt="コース"
           fill
           className="object-cover"
           priority

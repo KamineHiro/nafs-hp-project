@@ -6,7 +6,7 @@ import { FileDown } from 'lucide-react'
 const downloadCategories = [
   {
     title: "入学資料",
-    icon: "/images/admission-icon.svg",
+    icon: "/images/downloads/admission-icon.svg",
     items: [
       {
         name: "募集要項（日本語）",
@@ -18,7 +18,7 @@ const downloadCategories = [
   },
   {
     title: "定期報告",
-    icon: "/images/report-icon.svg",
+    icon: "/images/downloads/report-icon.svg",
     items: [
       {
         name: "自己点検・評価報告書（2023年度）",
@@ -36,7 +36,7 @@ const downloadCategories = [
   },
   {
     title: "パンフレット等",
-    icon: "/images/pamphlet-icon.svg",
+    icon: "/images/downloads/pamphlet-icon.svg",
     items: [
       {
         name: "学校案内（日本語・英語）",
@@ -60,7 +60,7 @@ export default function Downloads() {
       {/* ヘッダー画像 */}
       <div className="relative h-[400px] overflow-hidden">
         <Image
-          src="/images/downloads-hero.jpg"
+          src="/images/downloads/downloads-hero.jpg"
           alt="書類ダウンロード"
           fill
           className="object-cover"

@@ -11,12 +11,13 @@ export default async function News() {
       {/* ヒーローセクション */}
       <div className="relative h-[400px] overflow-hidden">
         <Image
-          src="/images/news-hero.jpg"
+          src="/images/news/news-hero.jpg"
           alt="最新記事"
           fill
-          sizes="100vw"
+          sizes="(max-width: 768px) 100vw, 100vw"
           className="object-cover"
-          priority
+          priority={true}
+          quality={75}
         />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <div className="text-center text-white">

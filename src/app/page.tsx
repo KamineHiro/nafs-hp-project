@@ -6,15 +6,15 @@ import { useState, useEffect } from 'react'
 
 const heroImages = [
   {
-    src: "/images/hero/hero1.jpg",
+    src: "/images/home/hero1.jpg",
     alt: "NAFSキャンパス外観"
   },
   {
-    src: "/images/hero/hero2.jpg",
+    src: "/images/home/hero2.jpg",
     alt: "授業風景"
   },
   {
-    src: "/images/hero/hero3.jpg",
+    src: "/images/home/hero3.jpg",
     alt: "学生生活"
   }
 ]
@@ -36,19 +36,19 @@ export default function Home() {
     {
       title: "理念方針",
       description: "「学ぶ」を重んじ、「できる」を叶える",
-      icon: "/images/philosophy.svg",
+      icon: "/images/home/philosophy.svg",
       link: "/about"
     },
     {
       title: "コース紹介",
       description: "進学1年6か月コース、進学2年コース",
-      icon: "/images/course.svg",
+      icon: "/images/home/course.svg",
       link: "/courses"
     },
     {
       title: "自然な日本語",
       description: "自然な日本語というのは何でしょうか",
-      icon: "/images/japanese.svg",
+      icon: "/images/home/japanese.svg",
       link: "/about"
     }
   ]
@@ -81,7 +81,7 @@ export default function Home() {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
           <div className="relative w-full max-w-[90vh] h-[200px] mb-8">
             <Image
-              src="/images/title-logo.png"
+              src="/images/home/title-logo.png"
               alt="NAFS 日琉国際言語学院"
               fill
               className="object-contain"
@@ -150,7 +150,7 @@ export default function Home() {
           {/* 左側：桜の画像 */}
           <div className="relative h-[600px]">
             <Image
-              src="/images/sakura.jpg"
+              src="/images/home/sakura.jpg"
               alt="桜の風景"
               fill
               className="object-cover"
@@ -299,7 +299,7 @@ export default function Home() {
       </section>
 
       {/* ドラゴンボートレースセクション */}
-      <section className="relative h-[600px] bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/images/dragon-boat.jpg')" }}>
+      <section className="relative h-[600px] bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/images/home/dragon-boat.jpg')" }}>
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative container mx-auto px-4 h-full flex items-center">
           <div className="max-w-4xl">
@@ -336,42 +336,42 @@ const staffMembers = [
   {
     name: "ゆりえ",
     role: "日本語教師",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "るな",
     role: "日本語教師",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "きんい",
     role: "生活指導",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "あきら",
     role: "事務員",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "しんしん",
     role: "教務主任",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "まこ",
     role: "日本語教師",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "なつき",
     role: "日本語教師",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   },
   {
     name: "れいな",
     role: "生活指導",
-    image: "/images/sample.jpg"
+    image: "/images/home/staff/sample.jpg"
   }
 ]
 
