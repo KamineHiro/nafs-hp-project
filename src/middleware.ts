@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth } from "next-auth/middleware"
 
 // Basic認証の関数
 function basicAuth(req: NextRequest) {
