@@ -18,34 +18,16 @@ function basicAuth(req: NextRequest) {
   return null
 }
 
-// /admin/login 以外の /admin/* パスを保護
-export default withAuth(
-  function middleware(req) {
-    // 本番環境でのみBasic認証を有効にする
-    if (process.env.NODE_ENV === 'production') {
-      const basicAuthResult = basicAuth(req)
-      if (basicAuthResult) return basicAuthResult
-    }
-    return
-  },
-  {
-    pages: {
-      signIn: "/admin/login",
-    },
-    callbacks: {
-      authorized: ({ token, req }) => {
-        if (req.nextUrl.pathname === "/admin/login") {
-          return true
-        }
-        return !!token
-      },
-    },
+// サイト全体を保護
+export function middleware(req: NextRequest) {
+  // 本番環境でのみBasic認証を有効にする
+  if (process.env.NODE_ENV === 'production') {
+    return basicAuth(req) || NextResponse.next()
   }
-)
+  return NextResponse.next()
+}
 
+// すべてのパスに適用
 export const config = {
-  matcher: [
-    '/admin',
-    '/admin/((?!login).)*'
-  ]
+  matcher: '/(.*)'  // すべてのルートを保護
 } 
