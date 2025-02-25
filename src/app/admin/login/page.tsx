@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/admin'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,12 +20,13 @@ export default function LoginPage() {
         username,
         password,
         redirect: false,
+        callbackUrl,
       })
 
       if (result?.error) {
         setError('ログインに失敗しました')
       } else {
-        router.push('/admin')
+        router.push(callbackUrl)
       }
     } catch (error) {
       setError('エラーが発生しました')

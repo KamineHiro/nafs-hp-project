@@ -33,7 +33,7 @@ export default async function News() {
       </div>
 
       {/* ニュース一覧 */}
-      <section className="py-20">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid gap-8">
             {posts.map((post: Post) => (

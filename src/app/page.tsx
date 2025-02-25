@@ -1,7 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { ArrowRight, ChevronDown } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from 'react'
@@ -81,7 +79,7 @@ export default function Home() {
 
         {/* タイトルと説明 */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10">
-          <div className="relative w-[800px] h-[200px] mb-8">
+          <div className="relative w-full max-w-[90vh] h-[200px] mb-8">
             <Image
               src="/images/title-logo.png"
               alt="NAFS 日琉国際言語学院"

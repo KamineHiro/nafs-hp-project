@@ -1,8 +1,60 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client"
+
+import { useEffect, useRef } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+declare global {
+  interface Window {
+    initMap?: () => void
+  }
+}
 
 export default function Contact() {
+  const mapRef = useRef<HTMLDivElement>(null)
+  const scriptRef = useRef<HTMLScriptElement | null>(null)
+
+  useEffect(() => {
+    if (window.google) {
+      initMap()
+      return
+    }
+
+    window.initMap = initMap
+    scriptRef.current = document.createElement('script')
+    scriptRef.current.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initMap`
+    scriptRef.current.async = true
+    scriptRef.current.defer = true
+    document.head.appendChild(scriptRef.current)
+
+    return () => {
+      if (scriptRef.current) {
+        document.head.removeChild(scriptRef.current)
+      }
+      window.initMap = undefined
+    }
+  }, [])
+
+  const initMap = () => {
+    if (!mapRef.current) return
+
+    const schoolLocation = { 
+      lat: 26.1294, 
+      lng: 127.6690 
+    }
+    const map = new google.maps.Map(mapRef.current, {
+      center: schoolLocation,
+      zoom: 17,
+    })
+
+    new google.maps.Marker({
+      position: schoolLocation,
+      map,
+      title: "日琉国際言語学院",
+      animation: google.maps.Animation.DROP
+    })
+  }
+
   return (
     <div className="min-h-screen">
       {/* ヘッダー画像 */}
@@ -55,7 +107,7 @@ export default function Contact() {
                 </svg>
               </div>
               <h3 className="font-bold mb-2">営業時間</h3>
-              <p className="text-gray-600">月〜金：8:30 - 17:30</p>
+              <p className="text-gray-600">月〜金 8:30 - 17:30</p>
               <p className="text-gray-600">土日祝休み</p>
             </div>
 
@@ -73,17 +125,10 @@ export default function Contact() {
           </div>
 
           {/* Google Maps */}
-          <div className="aspect-w-16 aspect-h-9 max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3579.8876368!2d127.66900699999999!3d26.129405!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34e56bd8b45d0c63%3A0x4e4d0e5e58c5c0c0!2z5pel55Sw5Zu96Zqb6KiY6K235bCC!5e0!3m2!1sja!2sjp!4v1709705844630!5m2!1sja!2sjp"
-              width="100%"
-              height="450"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
+          <div 
+            ref={mapRef} 
+            className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg"
+          />
 
           <div className="text-center mt-8 text-gray-600">
             <p>那覇空港から車で20分です。</p>

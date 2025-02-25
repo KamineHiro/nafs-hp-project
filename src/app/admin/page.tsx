@@ -1,8 +1,11 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FileDown, Image as ImageIcon, Save } from 'lucide-react'
+import { FileDown, Image as ImageIcon, Save, Upload } from 'lucide-react'
+
+// 既存のカテゴリーリスト
+const existingCategories = ['イベント', 'ニュース', '表彰', '清掃', '学校生活']
 
 export default function AdminPage() {
   const [title, setTitle] = useState('')
@@ -11,7 +14,12 @@ export default function AdminPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [coverImage, setCoverImage] = useState('')
   const [newCategory, setNewCategory] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
+
+  const [customCategory, setCustomCategory] = useState('')
+  const [availableCategories, setAvailableCategories] = useState(existingCategories)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,6 +42,71 @@ export default function AdminPage() {
 
       if (response.ok) {
         router.push('/news')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
+  }
+
+  // 画像アップロード処理
+  const handleImageUpload = async (file: File) => {
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) throw new Error('Upload failed')
+
+      const data = await response.json()
+      return data.url
+    } catch (error) {
+      console.error('Error:', error)
+      return null
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  // 画像の挿入
+  const insertImage = async (file: File) => {
+    const imageUrl = await handleImageUpload(file)
+    if (imageUrl) {
+      const imageMarkdown = `\n![${file.name}](${imageUrl})\n`
+      setContent(prev => prev + imageMarkdown)
+    }
+  }
+
+  // カバー画像の設定
+  const handleCoverImageUpload = async (file: File) => {
+    const imageUrl = await handleImageUpload(file)
+    if (imageUrl) {
+      setCoverImage(imageUrl)
+    }
+  }
+
+  // カテゴリーを追加
+  const handleAddCustomCategory = async () => {
+    if (!customCategory) return
+
+    try {
+      const response = await fetch('/api/categories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ category: customCategory }),
+      })
+
+      if (response.ok) {
+        const updatedCategories = await response.json()
+        setAvailableCategories(updatedCategories)
+        setCategories([...categories, customCategory])
+        setCustomCategory('')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -84,7 +157,7 @@ export default function AdminPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               カテゴリー
             </label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex flex-wrap gap-2 mb-2">
               {categories.map((category, index) => (
                 <span
                   key={index}
@@ -102,17 +175,22 @@ export default function AdminPage() {
               ))}
             </div>
             <div className="flex gap-2">
-              <input
-                type="text"
+              <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="新しいカテゴリーを追加"
-              />
+              >
+                <option value="">既存のカテゴリーから選択</option>
+                {availableCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 onClick={() => {
-                  if (newCategory) {
+                  if (newCategory && !categories.includes(newCategory)) {
                     setCategories([...categories, newCategory])
                     setNewCategory('')
                   }
@@ -122,26 +200,28 @@ export default function AdminPage() {
                 追加
               </button>
             </div>
-          </div>
-
-          {/* 本文 */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              本文 (Markdown)
-            </label>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono"
-              rows={15}
-              required
-            />
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="新しいカテゴリーを入力"
+              />
+              <button
+                type="button"
+                onClick={handleAddCustomCategory}
+                className="px-4 py-2 bg-[#FFD700] text-black rounded-md hover:bg-opacity-90"
+              >
+                新規作成
+              </button>
+            </div>
           </div>
 
           {/* カバー画像 */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              カバー画像URL
+              カバー画像
             </label>
             <div className="flex gap-2">
               <input
@@ -149,25 +229,69 @@ export default function AdminPage() {
                 value={coverImage}
                 onChange={(e) => setCoverImage(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="画像のURL"
                 required
               />
               <button
                 type="button"
+                onClick={() => fileInputRef.current?.click()}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+              >
+                <Upload className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* 本文 */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              本文 (Markdown)
+            </label>
+            <div className="relative">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono"
+                rows={15}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute right-2 bottom-2 p-2 bg-gray-100 rounded-md hover:bg-gray-200"
               >
                 <ImageIcon className="w-5 h-5" />
               </button>
             </div>
           </div>
 
+          {/* 非表示のファイル入力 */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) {
+                if (!coverImage) {
+                  handleCoverImageUpload(file)
+                } else {
+                  insertImage(file)
+                }
+              }
+            }}
+          />
+
           {/* 送信ボタン */}
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-6 py-3 bg-[#FFD700] text-black rounded-md hover:bg-opacity-90 flex items-center gap-2"
+              disabled={uploading}
+              className="px-6 py-3 bg-[#FFD700] text-black rounded-md hover:bg-opacity-90 flex items-center gap-2 disabled:opacity-50"
             >
               <Save className="w-5 h-5" />
-              保存する
+              {uploading ? '画像アップロード中...' : '保存する'}
             </button>
           </div>
         </form>

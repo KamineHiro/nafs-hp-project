@@ -13,23 +13,46 @@ export async function POST(request: Request) {
       title,
       excerpt,
       coverImage,
-      date,
+      date: date || new Date().toISOString().split('T')[0],
       categories
     }
 
     const markdown = matter.stringify(content, frontMatter)
 
-    // ファイル名を生成（タイトルをスラッグ化）
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
+    // タイムスタンプのみをファイル名として使用
+    const timestamp = Date.now()
+    const filename = `${timestamp}.md`
+
+    // _postsディレクトリのパスを設定
+    const postsDirectory = path.join(process.cwd(), '_posts')
+
+    // ディレクトリが存在しない場合は作成
+    if (!fs.existsSync(postsDirectory)) {
+      fs.mkdirSync(postsDirectory, { recursive: true })
+    }
 
     // ファイルを保存
-    const postsDirectory = path.join(process.cwd(), '_posts')
-    fs.writeFileSync(path.join(postsDirectory, `${slug}.md`), markdown)
+    fs.writeFileSync(path.join(postsDirectory, filename), markdown)
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, slug: timestamp.toString() })
+  } catch (error) {
+    console.error('Error:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
+
+// カテゴリー一覧を取得するエンドポイント
+export async function GET() {
+  try {
+    const categoriesPath = path.join(process.cwd(), 'src/data/categories.json')
+    let categories = []
+    
+    if (fs.existsSync(categoriesPath)) {
+      const data = fs.readFileSync(categoriesPath, 'utf8')
+      categories = JSON.parse(data)
+    }
+
+    return NextResponse.json(categories)
   } catch (error) {
     console.error('Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
