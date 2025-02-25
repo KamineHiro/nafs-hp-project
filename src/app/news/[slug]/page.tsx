@@ -3,22 +3,61 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
-import type { Components } from 'react-markdown'
+import type { Metadata, ResolvingMetadata } from 'next'
 
-// 静的なパスを生成
+// 型定義を更新
+type Props = {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+// generateStaticParamsの戻り値の型を明示的に指定
 export async function generateStaticParams() {
   const slugs = getPostSlugs()
   return slugs.map((slug) => ({
-    slug: slug.replace(/\.md$/, '').replace(/^\d+-/, '') // タイムスタンプを除去
+    slug: slug.replace(/\.md$/, '').replace(/^\d+-/, '')
   }))
 }
 
-export default async function PostPage({
-  params
-}: {
-  params: { slug: string }
-}) {
-  const post = await getPostBySlug(params.slug)
+// generateMetadataの型を修正
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // paramsを解決
+  const slug = (await params).slug
+  const post = await getPostBySlug(slug)
+  if (!post) notFound()
+
+  // 親のメタデータを取得
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: `${post.title} | NAFS`,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/news/${slug}`,
+      siteName: "NAFS",
+      images: [
+        {
+          url: post.coverImage || "/images/news/news-hero.jpg",
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+        ...previousImages
+      ],
+      type: "article",
+    },
+  }
+}
+
+export default async function PostPage({ params }: Props) {
+  // paramsを解決
+  const slug = (await params).slug
+  const post = await getPostBySlug(slug)
   if (!post) notFound()
 
   return (
@@ -91,4 +130,4 @@ export default async function PostPage({
       </article>
     </div>
   )
-} 
+}

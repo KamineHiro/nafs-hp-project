@@ -316,21 +316,6 @@ export default function Home() {
   )
 }
 
-const activities = [
-  {
-    title: "環境保全活動",
-    description: "沖縄の豊かな自然環境を守り、次世代に継承するための活動を行っています。",
-  },
-  {
-    title: "教育支援",
-    description: "持続可能な開発のための教育（ESD）を通じて、未来を担う人材を育成します。",
-  },
-  {
-    title: "地域活性化",
-    description: "地域の資源を活かした持続可能な地域づくりを支援しています。",
-  },
-]
-
 // 教職員データ
 const staffMembers = [
   {

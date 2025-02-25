@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,20 +10,13 @@ import { usePathname } from 'next/navigation'
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [hasScrolled, setHasScrolled] = useState(false)
-  const { scrollY } = useScroll()
   const [backgroundColor, setBackgroundColor] = useState("transparent")
   const pathname = usePathname()
-
-  // スクロールに応じて背景色を変更
-  const backgroundColorTransform = useTransform(
-    scrollY,
-    [0, 100],
-    ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
-  )
 
   useEffect(() => {
     const handleScroll = () => {
       setHasScrolled(window.scrollY > 10)
+      setBackgroundColor(window.scrollY > 10 ? "rgba(255, 255, 255, 0.9)" : "transparent")
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)

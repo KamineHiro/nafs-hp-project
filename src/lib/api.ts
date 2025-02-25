@@ -55,4 +55,6 @@ export async function getAllPosts(): Promise<Post[]> {
     .sort((post1, post2) => 
       new Date(post2.date).getTime() - new Date(post1.date).getTime()
     )
-} 
+}
+
+export type { Post } from '@/types/post'  // Postタイプをre-export 

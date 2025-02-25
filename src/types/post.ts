@@ -8,6 +8,7 @@ export type Post = {
   title: string;
   excerpt: string;
   coverImage: string;
+  image?: string;
   date: string;
   categories: string[];
   content: string;

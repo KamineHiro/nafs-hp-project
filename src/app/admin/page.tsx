@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FileDown, Image as ImageIcon, Save, Upload } from 'lucide-react'
+import { Image as ImageIcon, Save, Upload } from 'lucide-react'
 
 // 既存のカテゴリーリスト
 const existingCategories = ['イベント', 'ニュース', '表彰', '清掃', '学校生活']

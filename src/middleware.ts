@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware"
 
 // /admin/login 以外の /admin/* パスを保護
 export default withAuth(
-  function middleware(req) {
+  function middleware() {
     return
   },
   {
