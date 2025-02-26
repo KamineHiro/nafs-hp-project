@@ -9,7 +9,7 @@ export default async function News() {
   return (
     <div className="min-h-screen">
       {/* ヒーローセクション */}
-      <div className="relative h-[400px] overflow-hidden">
+      <div className="relative h-[700px] overflow-hidden">
         <Image
           src="/images/news/news-hero.jpg"
           alt="最新記事"

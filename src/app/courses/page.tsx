@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from "next/image"
 import Link from "next/link"
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 
 const courses = [
   {
@@ -41,13 +42,7 @@ export default function Courses() {
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">コース</h1>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <Link href="/" className="hover:text-primary-color transition-colors">
-                ホーム
-              </Link>
-              <span>›</span>
-              <span>コース</span>
-            </div>
+            <Breadcrumb currentPage="コース案内" />
           </div>
         </div>
       </div>

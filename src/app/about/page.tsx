@@ -1,6 +1,46 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
+
+// 学校の歴史データ
+const history = [
+  {
+    year: '2022年',
+    events: [
+      {
+        title: '日琉国際言語学院 設立',
+        description: '沖縄県糸満市に日本語教育機関として設立',
+        image: '/images/about/history/sample.jpg'
+      }
+    ]
+  },
+  {
+    year: '2023年',
+    events: [
+      {
+        title: '第一期生入学',
+        description: '第一期生として10カ国から40名の留学生を迎える',
+        image: '/images/about/history/sample.jpg'
+      },
+      {
+        title: 'JLPT N2全員合格達成',
+        description: '第一期生全員がJLPT N2に合格という快挙を達成',
+        image: '/images/about/history/sample.jpg'
+      }
+    ]
+  },
+  {
+    year: '2024年',
+    events: [
+      {
+        title: '新校舎完成',
+        description: '増加する学生に対応するため、新校舎が完成',
+        image: '/images/about/history/sample.jpg'
+      }
+    ]
+  }
+];
 
 export default function About() {
   return (
@@ -17,13 +57,7 @@ export default function About() {
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">学校について</h1>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <Link href="/" className="hover:text-primary-color transition-colors">
-                ホーム
-              </Link>
-              <span>›</span>
-              <span>学校について</span>
-            </div>
+            <Breadcrumb currentPage="学校紹介" />
           </div>
         </div>
       </div>
@@ -121,6 +155,53 @@ export default function About() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 学校の歴史セクション */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">学校の歴史</h2>
+          
+          <div className="max-w-4xl mx-auto relative">
+            {/* 縦の線 */}
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+            
+            {history.map((period) => (
+              <div key={period.year} className="mb-16 last:mb-0 relative pl-12">
+                {/* 丸いポイント */}
+                <div className="absolute left-0 w-8 h-8 bg-[#FFD700] rounded-full border-4 border-white shadow-md" />
+                
+                <h3 className="text-2xl font-bold mb-8 inline-block relative">
+                  {period.year}
+                  <span className="absolute bottom-0 left-0 w-full h-1 bg-[#FFD700]"></span>
+                </h3>
+
+                <div className="space-y-12">
+                  {period.events.map((event, eventIndex) => (
+                    <div key={eventIndex} className="flex flex-col md:flex-row gap-8 items-center">
+                      <div className="w-full md:w-1/2">
+                        <div className="relative h-64 w-full">
+                          <Image
+                            src={event.image}
+                            alt={event.title}
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        </div>
+                      </div>
+                      <div className="w-full md:w-1/2">
+                        <h4 className="text-xl font-bold mb-4">{event.title}</h4>
+                        <p className="text-gray-600 leading-relaxed">
+                          {event.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 "use client"
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 
 export default function Contact() {
   return (
@@ -18,13 +18,7 @@ export default function Contact() {
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">お問い合わせ</h1>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <Link href="/" className="hover:text-primary-color transition-colors">
-                ホーム
-              </Link>
-              <span>›</span>
-              <span>お問い合わせ</span>
-            </div>
+            <Breadcrumb currentPage="お問い合わせ" />
           </div>
         </div>
       </div>

@@ -199,7 +199,7 @@ export default function Home() {
               <div className="bg-white rounded-lg overflow-hidden shadow-sm">
                 <div className="relative h-48">
                   <Image
-                    src="/images/news1.jpg"
+                    src="/images/home/news1.jpg"
                     alt="年末パーティー"
                     fill
                     className="object-cover"
@@ -217,7 +217,7 @@ export default function Home() {
               <div className="bg-white rounded-lg overflow-hidden shadow-sm">
                 <div className="relative h-48">
                   <Image
-                    src="/images/news2.jpg"
+                    src="/images/home/news2.jpg"
                     alt="清掃活動"
                     fill
                     className="object-cover"
@@ -235,7 +235,7 @@ export default function Home() {
               <div className="bg-white rounded-lg overflow-hidden shadow-sm">
                 <div className="relative h-48">
                   <Image
-                    src="/images/news3.jpg"
+                    src="/images/home/news3.jpg"
                     alt="JLPT試験"
                     fill
                     className="object-cover"
