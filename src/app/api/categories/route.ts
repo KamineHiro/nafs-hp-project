@@ -34,4 +34,17 @@ export async function POST(request: Request) {
     console.error('Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
+}
+
+// カテゴリー一覧を取得
+export async function GET() {
+  try {
+    // 既存のカテゴリーリスト
+    const categories = ['イベント', 'ニュース', '表彰', '清掃', '学校生活']
+    
+    return NextResponse.json(categories)
+  } catch (error) {
+    console.error('Error:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
 } 

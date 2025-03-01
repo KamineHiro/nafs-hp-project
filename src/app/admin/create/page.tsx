@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import dynamic from "next/dynamic"
 import { Tab } from "@headlessui/react"
 import ReactMarkdown from "react-markdown"
+import Image from "next/image"
 
 // リッチテキストエディタをクライアントサイドのみでロード
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false })
@@ -18,7 +19,6 @@ export default function CreatePost() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState("")
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -29,7 +29,8 @@ export default function CreatePost() {
         if (!res.ok) {
           router.push("/admin/login")
         }
-      } catch (err) {
+      } catch (error) {
+        console.error("認証エラー:", error)
         router.push("/admin/login")
       }
     }
@@ -40,14 +41,18 @@ export default function CreatePost() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!title.trim() || !content.trim()) {
-      setError("タイトルと内容を入力してください")
+    if (!title.trim()) {
+      setError("タイトルを入力してください")
       return
     }
-
+    
+    if (!content.trim()) {
+      setError("内容を入力してください")
+      return
+    }
+    
     setIsSubmitting(true)
-    setError("")
-
+    
     try {
       const res = await fetch("/api/posts", {
         method: "POST",
@@ -62,82 +67,114 @@ export default function CreatePost() {
           date: new Date().toISOString(),
         }),
       })
-
+      
       if (!res.ok) {
         throw new Error("記事の作成に失敗しました")
       }
-
+      
       router.push("/admin")
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error("Error:", error)
       setError("記事の作成中にエラーが発生しました")
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleAddTag = () => {
+  const handleTagAdd = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags([...tags, tagInput.trim()])
       setTagInput("")
     }
   }
 
-  const handleRemoveTag = (tagToRemove: string) => {
+  const handleTagRemove = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove))
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+  const handleTagInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
       e.preventDefault()
-      handleAddTag()
+      handleTagAdd()
     }
   }
 
-  const handleThumbnailUpload = async (file: File) => {
+  const handleImageUpload = async (file: File) => {
     if (!file) return
 
     setIsUploading(true)
-    setError("")
+    const formData = new FormData()
+    formData.append("file", file)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
+      const res = await fetch("/api/upload", {
+        method: "POST",
         body: formData,
       })
 
-      if (!response.ok) {
-        throw new Error('サムネイルのアップロードに失敗しました')
+      if (!res.ok) {
+        throw new Error("画像のアップロードに失敗しました")
       }
 
-      const data = await response.json()
-      setThumbnail(data.url)
+      const data = await res.json()
+      return data.url
     } catch (error) {
-      console.error('Error uploading thumbnail:', error)
-      setError(error instanceof Error ? error.message : 'サムネイルのアップロードに失敗しました')
+      console.error("Error uploading image:", error)
+      setError("画像のアップロードに失敗しました")
+      return null
     } finally {
       setIsUploading(false)
     }
   }
 
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      const imageUrl = await handleImageUpload(file)
+      if (imageUrl) {
+        setThumbnail(imageUrl)
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  // プレビュー用のコンポーネント
+  const PreviewImage = ({ src }: { src: string }) => {
+    if (!src) return null
+    
+    return (
+      <div className="relative h-48 w-full mb-4">
+        <Image
+          src={src}
+          alt="サムネイル"
+          fill
+          className="object-cover rounded-lg"
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen pt-24 pb-12">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold mb-8">新規記事作成</h1>
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+          <h1 className="text-2xl font-bold mb-6">新規記事作成</h1>
           
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-              {error}
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+              <p>{error}</p>
             </div>
           )}
           
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
-              <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
                 タイトル
               </label>
               <input
@@ -145,68 +182,44 @@ export default function CreatePost() {
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
                 placeholder="記事のタイトルを入力"
-                required
               />
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="thumbnail" className="block text-gray-700 font-medium mb-2">
                 サムネイル画像
               </label>
-              <div className="flex items-center space-x-4">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 disabled:opacity-50"
-                >
-                  {isUploading ? "アップロード中..." : "画像を選択"}
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={(e) => e.target.files && handleThumbnailUpload(e.target.files[0])}
-                  accept="image/*"
-                  className="hidden"
-                />
-                {thumbnail && (
-                  <div className="relative w-24 h-24">
-                    <img
-                      src={thumbnail}
-                      alt="サムネイル"
-                      className="w-full h-full object-cover rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setThumbnail("")}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-              </div>
+              <input
+                type="file"
+                id="thumbnail"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+              />
+              {isUploading && <p className="mt-2 text-gray-500">アップロード中...</p>}
+              {thumbnail && <PreviewImage src={thumbnail} />}
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="tags" className="block text-gray-700 font-medium mb-2">
                 タグ
               </label>
-              <div className="flex items-center space-x-2">
+              <div className="flex">
                 <input
                   type="text"
+                  id="tags"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
-                  placeholder="タグを入力（Enterで追加）"
+                  onKeyDown={handleTagInputKeyDown}
+                  className="flex-1 px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700]"
+                  placeholder="タグを入力して追加"
                 />
                 <button
                   type="button"
-                  onClick={handleAddTag}
-                  className="px-4 py-2 bg-[#FFD700] text-white rounded hover:bg-yellow-500"
+                  onClick={handleTagAdd}
+                  className="px-4 py-2 bg-[#FFD700] text-white rounded-r-lg hover:bg-yellow-500"
                 >
                   追加
                 </button>
@@ -221,10 +234,10 @@ export default function CreatePost() {
                       {tag}
                       <button
                         type="button"
-                        onClick={() => handleRemoveTag(tag)}
-                        className="ml-1.5 text-yellow-600 hover:text-yellow-900"
+                        onClick={() => handleTagRemove(tag)}
+                        className="ml-2 text-yellow-600 hover:text-yellow-800"
                       >
-                        ×
+                        &times;
                       </button>
                     </span>
                   ))}
@@ -233,25 +246,25 @@ export default function CreatePost() {
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-700 font-bold mb-2">
+              <label htmlFor="content" className="block text-gray-700 font-medium mb-2">
                 内容
               </label>
               <Tab.Group>
-                <Tab.List className="flex border-b border-gray-200 mb-4">
-                  <Tab className={({ selected }) => 
+                <Tab.List className="flex border-b mb-4">
+                  <Tab className={({ selected }) =>
                     `px-4 py-2 font-medium ${
-                      selected 
-                        ? 'text-[#FFD700] border-b-2 border-[#FFD700]' 
-                        : 'text-gray-500 hover:text-gray-700'
+                      selected
+                        ? "border-b-2 border-[#FFD700] text-[#FFD700]"
+                        : "text-gray-500 hover:text-gray-700"
                     }`
                   }>
                     編集
                   </Tab>
-                  <Tab className={({ selected }) => 
+                  <Tab className={({ selected }) =>
                     `px-4 py-2 font-medium ${
-                      selected 
-                        ? 'text-[#FFD700] border-b-2 border-[#FFD700]' 
-                        : 'text-gray-500 hover:text-gray-700'
+                      selected
+                        ? "border-b-2 border-[#FFD700] text-[#FFD700]"
+                        : "text-gray-500 hover:text-gray-700"
                     }`
                   }>
                     プレビュー
@@ -262,18 +275,14 @@ export default function CreatePost() {
                     <Editor
                       value={content}
                       onChange={setContent}
-                      placeholder="記事の内容を入力..."
+                      onImageUpload={handleImageUpload}
                     />
                   </Tab.Panel>
                   <Tab.Panel>
-                    <div className="prose max-w-none border border-gray-300 rounded-lg p-4 min-h-[300px]">
-                      {content ? (
-                        <ReactMarkdown>
-                          {content}
-                        </ReactMarkdown>
-                      ) : (
-                        <p className="text-gray-400">プレビューするコンテンツがありません</p>
-                      )}
+                    <div className="prose max-w-none border rounded-lg p-4 min-h-[300px]">
+                      <ReactMarkdown>
+                        {content}
+                      </ReactMarkdown>
                     </div>
                   </Tab.Panel>
                 </Tab.Panels>

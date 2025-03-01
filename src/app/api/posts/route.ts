@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
-import matter from 'gray-matter'
 import { cookies } from 'next/headers'
 
 // 記事一覧を取得
@@ -15,12 +14,11 @@ export async function GET() {
       return NextResponse.json([])
     }
     
-    const fileNames = fs.readdirSync(dataDirectory)
-    const posts = fileNames
-      .filter(fileName => fileName.endsWith('.json'))
-      .map(fileName => {
-        const filePath = path.join(dataDirectory, fileName)
-        const fileContents = fs.readFileSync(filePath, 'utf8')
+    const files = fs.readdirSync(dataDirectory)
+    const posts = files
+      .filter(file => file.endsWith('.json'))
+      .map(file => {
+        const fileContents = fs.readFileSync(path.join(dataDirectory, file), 'utf8')
         const post = JSON.parse(fileContents)
         return post
       })
@@ -29,7 +27,7 @@ export async function GET() {
     return NextResponse.json(posts)
   } catch (error) {
     console.error('Error:', error)
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 })
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
 
@@ -45,14 +43,6 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json()
-    const dataDirectory = path.join(process.cwd(), 'src/data/posts')
-    
-    // ディレクトリが存在しない場合は作成
-    if (!fs.existsSync(dataDirectory)) {
-      fs.mkdirSync(dataDirectory, { recursive: true })
-    }
-    
-    // 一意のIDを生成
     const id = `post_${Date.now()}`
     const post = {
       id,
@@ -63,28 +53,17 @@ export async function POST(request: Request) {
       thumbnail: data.thumbnail || "",
     }
 
+    const dataDirectory = path.join(process.cwd(), 'src/data/posts')
+    
+    // ディレクトリが存在しない場合は作成
+    if (!fs.existsSync(dataDirectory)) {
+      fs.mkdirSync(dataDirectory, { recursive: true })
+    }
+    
     const filePath = path.join(dataDirectory, `${id}.json`)
     fs.writeFileSync(filePath, JSON.stringify(post, null, 2), 'utf8')
 
-    return NextResponse.json(post)
-  } catch (error) {
-    console.error('Error:', error)
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 })
-  }
-}
-
-// カテゴリー一覧を取得するエンドポイント
-export async function GET_categories() {
-  try {
-    const categoriesPath = path.join(process.cwd(), 'src/data/categories.json')
-    let categories = []
-    
-    if (fs.existsSync(categoriesPath)) {
-      const data = fs.readFileSync(categoriesPath, 'utf8')
-      categories = JSON.parse(data)
-    }
-
-    return NextResponse.json(categories)
+    return NextResponse.json({ success: true, id })
   } catch (error) {
     console.error('Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

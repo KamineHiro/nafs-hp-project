@@ -5,16 +5,24 @@ import { useRouter, useParams } from "next/navigation"
 import dynamic from "next/dynamic"
 import { Tab } from "@headlessui/react"
 import ReactMarkdown from "react-markdown"
+import Image from "next/image"
 
 // リッチテキストエディタをクライアントサイドのみでロード
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false })
+
+// 既存のカテゴリーリスト
+const existingCategories = ['イベント', 'ニュース', '表彰', '清掃', '学校生活']
 
 export default function EditPost() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [date, setDate] = useState("")
+  const [tags, setTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState("")
+  const [thumbnail, setThumbnail] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
   const params = useParams()
@@ -30,7 +38,8 @@ export default function EditPost() {
         } else {
           fetchPost()
         }
-      } catch (err) {
+      } catch (error) {
+        console.error("認証エラー:", error)
         router.push("/admin/login")
       }
     }
@@ -45,8 +54,10 @@ export default function EditPost() {
         setTitle(data.title)
         setContent(data.content)
         setDate(data.date)
-      } catch (err) {
-        console.error(err)
+        setTags(data.tags || [])
+        setThumbnail(data.thumbnail || "")
+      } catch (error) {
+        console.error("Error:", error)
         setError("記事の取得中にエラーが発生しました")
       } finally {
         setIsLoading(false)
@@ -77,6 +88,8 @@ export default function EditPost() {
           title,
           content,
           date,
+          tags,
+          thumbnail
         }),
       })
 
@@ -85,11 +98,80 @@ export default function EditPost() {
       }
 
       router.push("/admin")
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.error("Error:", error)
       setError("記事の更新中にエラーが発生しました")
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleTagAdd = () => {
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
+      setTags([...tags, tagInput.trim()])
+      setTagInput("")
+    }
+  }
+
+  const handleTagRemove = (tagToRemove: string) => {
+    setTags(tags.filter(tag => tag !== tagToRemove))
+  }
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      handleTagAdd()
+    }
+  }
+
+  const handleCategorySelect = (category: string) => {
+    if (!tags.includes(category)) {
+      setTags([...tags, category])
+    }
+  }
+
+  const handleImageUpload = async (file: File) => {
+    if (!file) return
+
+    setIsUploading(true)
+    const formData = new FormData()
+    formData.append("file", file)
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!res.ok) {
+        throw new Error("画像のアップロードに失敗しました")
+      }
+
+      const data = await res.json()
+      return data.url
+    } catch (error) {
+      console.error("Error uploading image:", error)
+      setError("画像のアップロードに失敗しました")
+      return null
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    try {
+      const imageUrl = await handleImageUpload(file)
+      if (imageUrl) {
+        setThumbnail(imageUrl)
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -137,6 +219,97 @@ export default function EditPost() {
               />
             </div>
 
+            <div className="mb-6">
+              <label htmlFor="thumbnail" className="block text-gray-700 font-bold mb-2">
+                サムネイル画像
+              </label>
+              <input
+                type="file"
+                id="thumbnail"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-transparent"
+              />
+              {isUploading && <p className="mt-2 text-gray-500">アップロード中...</p>}
+              {thumbnail && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500 mb-1">現在のサムネイル:</p>
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={thumbnail}
+                      alt="サムネイル"
+                      className="h-full w-auto object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="tags" className="block text-gray-700 font-bold mb-2">
+                タグ
+              </label>
+              <div className="flex">
+                <input
+                  type="text"
+                  id="tags"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={handleTagInputKeyDown}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#FFD700] focus:border-transparent"
+                  placeholder="タグを入力して追加"
+                />
+                <button
+                  type="button"
+                  onClick={handleTagAdd}
+                  className="px-4 py-2 bg-[#FFD700] text-white rounded-r-lg hover:bg-yellow-500"
+                >
+                  追加
+                </button>
+              </div>
+              
+              <div className="mt-3">
+                <p className="text-sm text-gray-600 mb-2">既存のカテゴリーから選択:</p>
+                <div className="flex flex-wrap gap-2">
+                  {existingCategories.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => handleCategorySelect(category)}
+                      className={`px-3 py-1 text-sm rounded-full ${
+                        tags.includes(category)
+                          ? "bg-yellow-500 text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <p className="text-sm text-gray-600 w-full mb-1">選択中のタグ:</p>
+                  {tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleTagRemove(tag)}
+                        className="ml-2 text-yellow-600 hover:text-yellow-800"
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Tab.Group>
               <Tab.List className="flex space-x-1 rounded-xl bg-gray-100 p-1 mb-4">
                 <Tab
@@ -167,33 +340,28 @@ export default function EditPost() {
               <Tab.Panels>
                 <Tab.Panel>
                   <div className="mb-6">
-                    <label className="block text-gray-700 font-bold mb-2" htmlFor="content">
-                      内容
-                    </label>
                     <Editor
                       value={content}
                       onChange={setContent}
-                      placeholder="記事の内容を入力"
+                      onImageUpload={handleImageUpload}
                     />
                   </div>
                 </Tab.Panel>
                 <Tab.Panel>
-                  <div className="mb-6 border rounded-lg p-6 min-h-[300px] prose max-w-none">
-                    <h2 className="text-2xl font-bold mb-4">{title || "タイトル"}</h2>
-                    <div className="text-gray-500 mb-4">
-                      {new Date(date).toLocaleDateString("ja-JP")}
-                    </div>
-                    <ReactMarkdown>{content || "内容がここに表示されます"}</ReactMarkdown>
+                  <div className="prose max-w-none border border-gray-300 rounded-lg p-4 min-h-[300px]">
+                    <ReactMarkdown>
+                      {content}
+                    </ReactMarkdown>
                   </div>
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-6">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#FFD700] text-black px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-bold disabled:opacity-50"
+                className="bg-[#FFD700] text-white px-6 py-2 rounded-lg hover:bg-yellow-500 transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? "更新中..." : "更新する"}
               </button>

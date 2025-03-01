@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 type Post = {
   id: string
@@ -64,113 +65,62 @@ export default function NewsPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* ヒーローセクション */}
-      <div className="relative h-[700px] overflow-hidden">
-        <Image
-          src="/images/news/news-hero.jpg"
-          alt="最新記事"
-          fill
-          className="object-cover"
-          priority  
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white max-w-4xl px-4">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">最新記事</h1>
-            <p className="text-lg md:text-xl mb-6">
-              日琉国際言語学院の最新情報やイベント、学生の活動などをお届けします
-            </p>
-            <div className="flex items-center justify-center space-x-2 text-sm">
-              <Link href="/" className="text-white hover:text-[#FFD700] transition-colors">
-                ホーム
-              </Link>
-              <span className="text-white">›</span>
-              <span className="text-white">最新記事</span>
-            </div>
-          </div>
+    <div className="min-h-screen pt-24">
+      {/* ヘッダーセクション */}
+      <div className="bg-gray-50 py-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center mb-4">最新記事</h1>
+          <p className="text-gray-600 text-center max-w-2xl mx-auto">
+            学校の最新情報やイベント、学生の活動などをお届けします。
+          </p>
         </div>
       </div>
 
-      {/* 記事一覧セクション */}
-      <div className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      {/* 記事一覧 */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.length === 0 ? (
-            <p className="text-center text-gray-500">記事がありません</p>
+            <p className="text-gray-500 col-span-full text-center">記事がありません。</p>
           ) : (
-            <div className="max-w-4xl mx-auto space-y-8">
-              {posts.map((post) => {
-                // サムネイルがあればそれを使用、なければ記事内の最初の画像を使用
-                const imageUrl = post.thumbnail || extractFirstImageUrl(post.content)
-                
-                return (
-                  <div key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <Link href={`/news/${post.id.replace('post_', '')}`} className="block">
-                      <div className="flex flex-col md:flex-row">
-                        <div className="md:w-2/5 h-64 md:h-auto">
-                          <img
-                            src={imageUrl}
-                            alt={post.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = '/images/placeholder.jpg'
-                            }}
-                          />
-                        </div>
-                        <div className="md:w-3/5 p-6">
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {post.tags && post.tags.length > 0 ? (
-                              post.tags.map((tag, index) => (
-                                <span 
-                                  key={index} 
-                                  className="inline-block px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full"
-                                >
-                                  {tag}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="inline-block px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full">
-                                ニュース
-                              </span>
-                            )}
-                          </div>
-                          <h2 className="text-2xl font-bold mb-3 line-clamp-2">{post.title}</h2>
-                          <p className="text-gray-500 mb-4">
-                            <span className="inline-block mr-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              {new Date(post.date).toLocaleDateString("ja-JP")}
-                            </span>
-                            <span className="inline-block">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
-                              レイナ
-                            </span>
-                          </p>
-                          <div className="text-gray-600 line-clamp-3">
-                            {post.content.replace(/!\[.*?\]\(.*?\)/g, '').substring(0, 150)}
-                            {post.content.length > 150 ? '...' : ''}
-                          </div>
-                          <div className="mt-4">
-                            <span className="inline-block text-[#FFD700] font-semibold hover:underline">
-                              続きを読む →
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
+            posts.map((post) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <Link href={`/news/${post.id.replace('post_', '')}`}>
+                  <div className="relative h-48">
+                    <Image
+                      src={post.thumbnail || extractFirstImageUrl(post.content)}
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        // @ts-expect-error: Object is possibly 'null'
+                        e.target.src = '/images/placeholder.jpg';
+                      }}
+                    />
                   </div>
-                )
-              })}
-            </div>
+                  <div className="p-6">
+                    <div className="text-gray-500 text-sm mb-2">
+                      {new Date(post.date).toLocaleDateString("ja-JP")}
+                    </div>
+                    <h2 className="text-xl font-bold mb-3 hover:text-[#FFD700] transition-colors">
+                      {post.title}
+                    </h2>
+                    <p className="text-gray-600 mb-4">
+                      {post.content.replace(/!\[.*?\]\(.*?\)/g, '').substring(0, 100)}...
+                    </p>
+                    <span className="text-[#FFD700] font-semibold hover:underline">
+                      続きを読む
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            ))
           )}
-          
-          <div className="mt-12 text-center">
-            <button className="bg-[#FFD700] hover:bg-yellow-500 text-white font-bold py-2 px-6 rounded-full transition-colors">
-              もっと見る
-            </button>
-          </div>
         </div>
       </div>
     </div>

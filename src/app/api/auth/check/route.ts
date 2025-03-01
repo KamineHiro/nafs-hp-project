@@ -6,13 +6,6 @@ export async function GET() {
     const cookieStore = await cookies()
     const authToken = cookieStore.get('auth_token')
     
-    console.log('認証チェック:', { 
-      hasToken: !!authToken,
-      tokenValue: authToken?.value,
-      expectedToken: process.env.ADMIN_TOKEN,
-      match: authToken?.value === process.env.ADMIN_TOKEN
-    }) // デバッグ用（本番環境では削除）
-    
     if (!authToken || authToken.value !== process.env.ADMIN_TOKEN) {
       return NextResponse.json({ 
         authenticated: false,

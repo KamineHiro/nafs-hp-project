@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Azeret_Mono, Noto_Sans_JP } from "next/font/google"
 import "@/app/globals.css"
+import Navigation from '@/components/Navigation/Navigation'
+import Footer from '@/components/Footer/Footer'
 import { Providers } from './providers'
 
 const geistSans = Noto_Sans_JP({
@@ -37,7 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja">
       <body className={`${geistSans.variable} ${geistMono.variable} bg-white`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {/* 管理者ページではナビゲーションとフッターを表示しない */}
+          <div className="admin-path-check" data-is-admin="false"></div>
+          <Navigation />
+          <main>{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

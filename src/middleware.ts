@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-// Basic認証の関数
+// Basic認証の関数（現在は使用していないが、将来的に必要になる可能性があるため残しておく）
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function basicAuth(req: NextRequest) {
   const auth = req.headers.get('authorization')
   const password = process.env.VERCEL_PROTECT_PASSWORD
@@ -36,5 +38,8 @@ export function middleware(request: NextRequest) {
 
 // ミドルウェアを適用するパスを指定
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    // 保護したいパスを指定
+    '/admin/:path*',
+  ],
 } 
