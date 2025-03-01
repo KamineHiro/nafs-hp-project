@@ -65,63 +65,112 @@ export default function NewsPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24">
-      {/* ヘッダーセクション */}
-      <div className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center mb-4">最新記事</h1>
-          <p className="text-gray-600 text-center max-w-2xl mx-auto">
-            学校の最新情報やイベント、学生の活動などをお届けします。
-          </p>
+    <div className="min-h-screen">
+      {/* ヒーローセクション */}
+      <div className="relative h-[600px] overflow-hidden">
+        <Image
+          src="/images/news-hero.jpg"
+          alt="最新記事"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="text-center text-white max-w-4xl px-4">
+            <motion.h1 
+              className="text-5xl md:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              最新記事
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              学校の最新情報やイベント、学生の活動などをお届けします
+            </motion.p>
+            <motion.div 
+              className="mt-8 flex justify-center space-x-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <Link 
+                href="/" 
+                className="text-white hover:text-[#FFD700] transition-colors"
+              >
+                ホーム
+              </Link>
+              <span className="text-white">›</span>
+              <span className="text-[#FFD700]">最新記事</span>
+            </motion.div>
+          </div>
         </div>
       </div>
 
       {/* 記事一覧 */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           {posts.length === 0 ? (
             <p className="text-gray-500 col-span-full text-center">記事がありません。</p>
           ) : (
-            posts.map((post) => (
+            posts.map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
-                <Link href={`/news/${post.id.replace('post_', '')}`}>
-                  <div className="relative h-48">
-                    <Image
-                      src={post.thumbnail || extractFirstImageUrl(post.content)}
-                      alt={post.title}
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        // @ts-expect-error: Object is possibly 'null'
-                        e.target.src = '/images/placeholder.jpg';
-                      }}
-                    />
+                <div className="relative h-48">
+                  <Image
+                    src={post.thumbnail || extractFirstImageUrl(post.content)}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                    onError={(e) => {
+                      // @ts-expect-error: Object is possibly 'null'
+                      e.target.src = '/images/placeholder.jpg';
+                    }}
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {post.tags && post.tags.map((tag, i) => (
+                      <span key={i} className="px-2 py-1 bg-[#FFD700]/20 text-[#B8860B] text-xs rounded-full">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
-                  <div className="p-6">
-                    <div className="text-gray-500 text-sm mb-2">
-                      {new Date(post.date).toLocaleDateString("ja-JP")}
-                    </div>
-                    <h2 className="text-xl font-bold mb-3 hover:text-[#FFD700] transition-colors">
-                      {post.title}
-                    </h2>
-                    <p className="text-gray-600 mb-4">
-                      {post.content.replace(/!\[.*?\]\(.*?\)/g, '').substring(0, 100)}...
-                    </p>
-                    <span className="text-[#FFD700] font-semibold hover:underline">
-                      続きを読む
-                    </span>
+                  <div className="text-gray-500 text-sm mb-2">
+                    {new Date(post.date).toLocaleDateString("ja-JP")}
                   </div>
-                </Link>
+                  <h2 className="text-xl font-bold mb-3 hover:text-[#FFD700] transition-colors">
+                    {post.title}
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                    {post.content.replace(/!\[.*?\]\(.*?\)/g, '').substring(0, 100)}...
+                  </p>
+                  <Link href={`/news/${post.id.replace('post_', '')}`} className="text-[#FFD700] font-semibold hover:underline inline-flex items-center">
+                    続きを読む
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
               </motion.div>
             ))
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   )
