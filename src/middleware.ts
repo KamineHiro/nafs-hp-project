@@ -18,15 +18,23 @@ function basicAuth(req: NextRequest) {
 }
 
 // サイト全体を保護
-export function middleware(req: NextRequest) {
-  // 本番環境でのみBasic認証を有効にする
-  if (process.env.NODE_ENV === 'production') {
-    return basicAuth(req) || NextResponse.next()
+export function middleware(request: NextRequest) {
+  // 管理者ページへのアクセスをチェック
+  if (request.nextUrl.pathname.startsWith('/admin') && 
+      !request.nextUrl.pathname.includes('/login')) {
+    
+    const authToken = request.cookies.get('auth_token')?.value
+    
+    // トークンがない、または無効な場合はログインページにリダイレクト
+    if (!authToken || authToken !== process.env.ADMIN_TOKEN) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
+    }
   }
+  
   return NextResponse.next()
 }
 
-// すべてのパスに適用
+// ミドルウェアを適用するパスを指定
 export const config = {
-  matcher: '/(.*)'  // すべてのルートを保護
+  matcher: ['/admin/:path*'],
 } 

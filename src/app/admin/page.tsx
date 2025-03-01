@@ -1,13 +1,27 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Image as ImageIcon, Save, Upload } from 'lucide-react'
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 // 既存のカテゴリーリスト
 const existingCategories = ['イベント', 'ニュース', '表彰', '清掃', '学校生活']
 
-export default function AdminPage() {
+type Post = {
+  id: string
+  title: string
+  date: string
+  content: string
+}
+
+export default function AdminDashboard() {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
+  const router = useRouter()
+
   const [title, setTitle] = useState('')
   const [excerpt, setExcerpt] = useState('')
   const [content, setContent] = useState('')
@@ -16,10 +30,43 @@ export default function AdminPage() {
   const [newCategory, setNewCategory] = useState('')
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
 
   const [customCategory, setCustomCategory] = useState('')
   const [availableCategories, setAvailableCategories] = useState(existingCategories)
+
+  useEffect(() => {
+    // 認証状態の確認
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/check")
+        if (!res.ok) {
+          router.push("/admin/login")
+        } else {
+          fetchPosts()
+        }
+      } catch (err) {
+        router.push("/admin/login")
+      }
+    }
+
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch("/api/posts")
+        if (!res.ok) {
+          throw new Error("記事の取得に失敗しました")
+        }
+        const data = await res.json()
+        setPosts(data)
+      } catch (err) {
+        setError("記事の取得中にエラーが発生しました")
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkAuth()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,188 +160,127 @@ export default function AdminPage() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold">記事管理画面</h1>
-        </div>
+  const handleDelete = async (id: string) => {
+    if (!confirm("この記事を削除してもよろしいですか？")) return
+
+    try {
+      const res = await fetch(`/api/posts/${id}`, {
+        method: "DELETE",
+      })
+
+      if (!res.ok) {
+        throw new Error("記事の削除に失敗しました")
+      }
+
+      setPosts(posts.filter(post => post.id !== id))
+    } catch (err) {
+      console.error(err)
+      setError("記事の削除中にエラーが発生しました")
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FFD700]"></div>
       </div>
+    )
+  }
 
-      <div className="container mx-auto px-4 py-8">
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6">
-          {/* タイトル */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              タイトル
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          {/* 抜粋 */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              抜粋
-            </label>
-            <textarea
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              rows={3}
-              required
-            />
-          </div>
-
-          {/* カテゴリー */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              カテゴリー
-            </label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {categories.map((category, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-[#FFD700] text-black text-sm rounded-full flex items-center gap-2"
-                >
-                  {category}
-                  <button
-                    type="button"
-                    onClick={() => setCategories(categories.filter((_, i) => i !== index))}
-                    className="hover:text-red-500"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+  return (
+    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+      <div className="container mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">管理者ダッシュボード</h1>
+            <div className="flex space-x-4">
+              <Link
+                href="/admin/create"
+                className="bg-[#FFD700] text-black px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-bold"
               >
-                <option value="">既存のカテゴリーから選択</option>
-                {availableCategories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+                新規記事作成
+              </Link>
               <button
-                type="button"
-                onClick={() => {
-                  if (newCategory && !categories.includes(newCategory)) {
-                    setCategories([...categories, newCategory])
-                    setNewCategory('')
-                  }
-                }}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+                onClick={() => router.push("/api/auth/logout")}
+                className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
               >
-                追加
-              </button>
-            </div>
-            <div className="flex gap-2 mt-2">
-              <input
-                type="text"
-                value={customCategory}
-                onChange={(e) => setCustomCategory(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="新しいカテゴリーを入力"
-              />
-              <button
-                type="button"
-                onClick={handleAddCustomCategory}
-                className="px-4 py-2 bg-[#FFD700] text-black rounded-md hover:bg-opacity-90"
-              >
-                新規作成
+                ログアウト
               </button>
             </div>
           </div>
 
-          {/* カバー画像 */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              カバー画像
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={coverImage}
-                onChange={(e) => setCoverImage(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="画像のURL"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-              >
-                <Upload className="w-5 h-5" />
-              </button>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+              {error}
             </div>
-          </div>
+          )}
 
-          {/* 本文 */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              本文 (Markdown)
-            </label>
-            <div className="relative">
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md font-mono"
-                rows={15}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="absolute right-2 bottom-2 p-2 bg-gray-100 rounded-md hover:bg-gray-200"
-              >
-                <ImageIcon className="w-5 h-5" />
-              </button>
-            </div>
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">記事一覧</h2>
+            {posts.length === 0 ? (
+              <p className="text-gray-500">記事がありません。新しい記事を作成してください。</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white">
+                  <thead>
+                    <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                      <th className="py-3 px-6 text-left">タイトル</th>
+                      <th className="py-3 px-6 text-left">投稿日</th>
+                      <th className="py-3 px-6 text-center">アクション</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm">
+                    {posts.map((post) => (
+                      <motion.tr
+                        key={post.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="border-b border-gray-200 hover:bg-gray-50"
+                      >
+                        <td className="py-3 px-6 text-left">
+                          <div className="font-medium">{post.title}</div>
+                        </td>
+                        <td className="py-3 px-6 text-left">
+                          {new Date(post.date).toLocaleDateString("ja-JP")}
+                        </td>
+                        <td className="py-3 px-6 text-center">
+                          <div className="flex item-center justify-center space-x-2">
+                            <Link
+                              href={`/news/${post.id}`}
+                              className="text-blue-500 hover:text-blue-700"
+                              target="_blank"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            </Link>
+                            <Link
+                              href={`/admin/edit/${post.id}`}
+                              className="text-green-500 hover:text-green-700"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </Link>
+                            <button
+                              onClick={() => handleDelete(post.id)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
-
-          {/* 非表示のファイル入力 */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) {
-                if (!coverImage) {
-                  handleCoverImageUpload(file)
-                } else {
-                  insertImage(file)
-                }
-              }
-            }}
-          />
-
-          {/* 送信ボタン */}
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={uploading}
-              className="px-6 py-3 bg-[#FFD700] text-black rounded-md hover:bg-opacity-90 flex items-center gap-2 disabled:opacity-50"
-            >
-              <Save className="w-5 h-5" />
-              {uploading ? '画像アップロード中...' : '保存する'}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   )
