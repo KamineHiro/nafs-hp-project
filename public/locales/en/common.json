@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About Us",
+    "news": "News",
+    "downloads": "Downloads",
+    "contact": "Contact"
+  },
+  "footer": {
+    "copyright": "© 2023 NAFS. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "English"
+  }
+} 

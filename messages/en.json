@@ -1,0 +1,247 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "admission": "Admission",
+    "about": "About",
+    "news": "News",
+    "downloads": "Downloads",
+    "contact": "Contact",
+    "selectLanguage": "Select Language",
+    "adminLogin": "Admin Login"
+  },
+  "footer": {
+    "description": "Nichiryū International Language Academy is a Japanese language school in Itoman City, Okinawa. We provide high-quality Japanese education and enriching student life for international students from around the world.",
+    "address": "606 Itoman, Itoman City, Okinawa 901-0361",
+    "phone": "098-123-4567",
+    "email": "info@nafs.edu",
+    "copyright": "© 2024 Nichiryū International Language Academy. All rights reserved.",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "courses": "Courses",
+    "about": "About",
+    "news": "News",
+    "downloads": "Downloads",
+    "contactUs": "Contact Us",
+    "contactButton": "Contact Us",
+    "aboutSchool": {
+      "title": "About Nichiryū International Language Academy",
+      "tagline": "Learn natural Japanese at Japan's southernmost Japanese language school",
+      "entity": "Established by: Nichiryū International Language Academy Co., Ltd. (Japanese Language Education Institution)",
+      "director": "CEO: Li Tanki",
+      "philosophy": "School Philosophy: Valuing 'learning' to achieve 'capability'"
+    },
+    "languages": {
+      "title": "Other Languages"
+    },
+    "relatedLinks": {
+      "title": "Related Links",
+      "about": "About the School",
+      "accreditation": "List of Accredited Japanese Language Institutions"
+    },
+    "contact": {
+      "title": "Contact",
+      "address": {
+        "label": "Address",
+        "value": "606-2 Itoman, Itoman City"
+      },
+      "tel": {
+        "label": "TEL",
+        "value": "098-851-8266"
+      },
+      "fax": {
+        "label": "FAX",
+        "value": "098-851-8268"
+      },
+      "email": {
+        "label": "Email",
+        "value": "info@nafs.okinawa"
+      }
+    },
+    "copyrightWithYear": "Copyright © 2017 - {year} Nichiryū International Language Academy"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "notFound": "Page not found",
+    "backToHome": "Back to Home",
+    "readMore": "Read More",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "underConstruction": "Page under construction",
+    "comingSoon": "Coming soon"
+  },
+  "errors": {
+    "pageNotFound": "The page you are looking for does not exist or has been moved.",
+    "serverError": "Server error occurred. Please try again later.",
+    "formError": "Please check your input and try again."
+  },
+  "home": {
+    "hero": {
+      "subtitle": "From Okinawa to the world, from the world to Okinawa"
+    },
+    "features": [
+      {
+        "title": "School Philosophy",
+        "description": "Emphasizing 'Learning' to achieve 'Can-do'",
+        "image": "/images/features/philosophy.svg",
+        "alt": "School Philosophy Image"
+      },
+      {
+        "title": "Course Introduction",
+        "description": "1.5-year and 2-year Advanced Courses",
+        "image": "/images/features/course.svg",
+        "alt": "Course Introduction Image"
+      },
+      {
+        "title": "Natural Japanese",
+        "description": "What is Natural Japanese Language?",
+        "image": "/images/features/natural-japanese.svg",
+        "alt": "Natural Japanese Language Image"
+      }
+    ],
+    "admission": {
+      "title": "Admission Guide",
+      "visa": {
+        "title": "About Student Visa Status",
+        "description": "Students residing overseas who apply for the 1.5-year or 2-year academic course need to apply for a 'Student' visa (mid to long-term residence status). The 1.5-year course starts in October, while the 2-year course starts in April each year. We recommend preparing application materials six months in advance."
+      },
+      "residents": {
+        "title": "For Residents in Japan",
+        "description": "Those who do not need to apply for a new 'Student' visa include those who already hold a 'Student' visa in Japan or those who hold other residence statuses in Japan (e.g., Business Manager, Dependent, or other residence statuses). For enrollment periods and inquiries, you can contact the school at any time."
+      }
+    },
+    "news": {
+      "title": "Latest School News",
+      "description": "Check out the latest news from our school♪",
+      "items": [
+        {
+          "title": "2021 Year-End Party",
+          "description": "Hello everyone! On December 17th this year...",
+          "image": "/images/home/sample.jpg",
+          "alt": "Year-end Party"
+        },
+        {
+          "title": "Itoman City Regular Cleaning Activity",
+          "description": "Hello everyone! On the 25th of this month...",
+          "image": "/images/home/sample.jpg",
+          "alt": "Cleaning Activity"
+        },
+        {
+          "title": "2021 JLPT Second Test",
+          "description": "Hello everyone! On December 5th...",
+          "image": "/images/home/sample.jpg",
+          "alt": "JLPT Test"
+        }
+      ]
+    },
+    "readMore": "Read More",
+    "staff": {
+      "title": "Staff Introduction",
+      "subtitle": "Experienced teachers and staff will support your Japanese language learning"
+    },
+    "video": {
+      "title": "School Introduction Video",
+      "subtitle": "See the learning experience at Nichiryū International Language Academy"
+    },
+    "dragonboat": {
+      "description1": "Itoman City, where our school is located, has a long history with China and hosts the annual Itoman Haarii (Dragon Boat Race) similar to those in China. We strive to enable students to actively participate in this traditional event. We consider this activity an important part of our educational program aimed at preserving traditional culture and fostering teamwork spirit and sportsmanship among students.",
+      "description2": "Itoman Haarii is not just a sporting event, but a cultural heritage and a symbol of friendship. Through this activity, our school hopes that students will experience the local culture."
+    }
+  },
+  "courses": {
+    "hero": {
+      "title": "Courses",
+      "breadcrumb": "Course Information"
+    },
+    "intro": {
+      "title": "Course Introduction",
+      "description": "Our school offers academic preparation courses for Japanese vocational schools, universities, and graduate schools, as well as private lessons. Private lessons can be freely adjusted according to student needs."
+    },
+    "courseList": [
+      {
+        "id": "advanced-2year",
+        "title": "2-Year Academic Course",
+        "description": "Learn Japanese thoroughly from beginner to advanced levels at a comfortable pace.",
+        "details": "Starting from the basics, this course aims to develop Japanese language proficiency."
+      },
+      {
+        "id": "advanced-1.5year",
+        "title": "1.5-Year Academic Course",
+        "description": "For those who want to reach an advanced level in a shorter period.",
+        "details": "Starting from the basics, this course aims to develop Japanese language proficiency."
+      },
+      {
+        "id": "private",
+        "title": "Private Lessons",
+        "description": "Study Japanese freely at your own pace.",
+        "details": "Study Japanese freely at your own pace with customized lessons."
+      }
+    ],
+    "contact": {
+      "title": "Want to Know More About Our Courses?",
+      "description": "Feel free to contact us for details about each course and enrollment procedures.",
+      "button": "Contact Us"
+    },
+    "readMore": "Read More"
+  },
+  "news": {
+    "hero": {
+      "title": "Latest News",
+      "breadcrumb": "News"
+    },
+    "pageTitle": "School News",
+    "pageDescription": "Get the latest updates from Nichiryū International Language Academy.",
+    "errorMessage": "An error occurred while fetching articles",
+    "loadingMessage": "Loading articles...",
+    "noArticlesMessage": "No articles found",
+    "readMore": "Read More",
+    "backToNewsList": "Back to News List",
+    "publishedOn": "Published on: {date}"
+  },
+  "languageSelector": {
+    "label": "Select Language",
+    "japanese": "Japanese",
+    "english": "English",
+    "chinese": "Chinese"
+  },
+  "admin": {
+    "posts": {
+      "new": {
+        "title": "Create New Post"
+      },
+      "edit": {
+        "title": "Edit Post"
+      },
+      "form": {
+        "titleLabel": "Title",
+        "contentLabel": "Content",
+        "saveButton": "Save",
+        "saving": "Saving...",
+        "errorMessage": "An error occurred. Please try again.",
+        "successMessage": "Post saved successfully",
+        "previewToggle": "Preview",
+        "backToList": "Back to Post List",
+        "thumbnailLabel": "Thumbnail Image",
+        "thumbnailHint": "Click to upload image",
+        "publishedLabel": "Publish",
+        "draftSaved": "Draft saved"
+      }
+    }
+  },
+  "metadata": {
+    "siteName": "Nichiryū International Language Academy",
+    "description": "A Japanese language school in Itoman City, Okinawa. We provide high-quality Japanese education and enriching student life."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for does not exist or may have moved.",
+    "backToHome": "Back to Home"
+  },
+  "error": {
+    "title": "An Error Occurred",
+    "message": "Sorry, there was a problem with your request.",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home"
+  }
+}

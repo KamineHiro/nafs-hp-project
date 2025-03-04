@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { logout } from '@/lib/auth'
 
-export async function GET(request: Request) {
-  const cookieStore = await cookies()
-  
-  // 認証トークンを削除
-  cookieStore.delete('auth_token')
-  
-  return NextResponse.redirect(new URL('/admin/login', request.url))
+export async function POST() {
+  try {
+    await logout()
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Logout error:', error)
+    return NextResponse.json(
+      { message: 'ログアウト処理中にエラーが発生しました' },
+      { status: 500 }
+    )
+  }
 } 

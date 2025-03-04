@@ -1,0 +1,18 @@
+[
+  {
+    "id": "632cce0e-136c-452f-8619-6e52276b22a8",
+    "title": "TEST",
+    "content": "## **<h1>TESTがありました</h1>\n\n**太字です**\n\n*斜め文字です*\n\n終わりです\n\n---\n##### これはなんだ？\n\n画像を挿入します\n\n---\n![news1.jpg](/uploads/dc7af927-ba4a-40b6-869d-9a477c5c76b6.jpg)\n\n---\n\n![news2.jpg](/uploads/64d8c9a7-1dd2-4b00-bf1b-920476c6e9f5.jpg)\n\n編集しました2222！！！\n\n---\n\n新しい画像です！\n![sample.jpg](/uploads/26260c30-e8d0-4307-8fef-6cf9aef77e80.jpg)",
+    "date": "2025-03-03T00:00:00.000Z",
+    "tags": [
+      "イベント",
+      "ニュース",
+      "表彰",
+      "清掃",
+      "学校生活",
+      "TEST"
+    ],
+    "thumbnail": "/uploads/1559ac81-20a5-486b-997b-f82d325b1775.jpg",
+    "updatedAt": "2025-03-03T08:15:09.178Z"
+  }
+]

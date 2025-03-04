@@ -1,0 +1,261 @@
+{
+  "metadata": {
+    "siteName": "日琉国际语言学院",
+    "description": "位于冲绳县糸满市的日语学校。提供高质量的日语教育和生活支援。"
+  },
+  "nav": {
+    "home": "首页",
+    "courses": "课程",
+    "admission": "入学指南",
+    "about": "学校介绍",
+    "news": "新闻",
+    "downloads": "资料下载",
+    "contact": "联系我们",
+    "adminLogin": "管理员登录",
+    "selectLanguage": "选择语言"
+  },
+  "footer": {
+    "description": "日琉国际语言学院是位于冲绳县糸满市的日语学校。我们为来自世界各国的留学生提供高质量的日语教育和丰富的学生生活。",
+    "address": "邮编901-0361 冲绳县糸满市糸满606",
+    "phone": "098-123-4567",
+    "email": "info@nafs.edu",
+    "copyright": "© 2024 日琉国际语言学院. 版权所有.",
+    "quickLinks": "快速链接",
+    "home": "首页",
+    "courses": "课程",
+    "about": "关于学校",
+    "news": "最新文章",
+    "downloads": "资料下载",
+    "contactUs": "联系我们",
+    "contactButton": "联系我们",
+    "aboutSchool": {
+      "title": "关于日琉国际语言学院",
+      "tagline": "在日本最南端的日语学校学习自然的日语",
+      "entity": "设立主体：日琉国际语言学院株式会社（日语教育机构）",
+      "director": "代表董事：李 丹琪",
+      "philosophy": "学校理念:'重视学习',实现'能力'"
+    },
+    "languages": {
+      "title": "其他语言"
+    },
+    "relatedLinks": {
+      "title": "相关链接",
+      "about": "关于学校",
+      "accreditation": "认证日语教育机构列表"
+    },
+    "contact": {
+      "title": "联系方式",
+      "address": {
+        "label": "地址",
+        "value": "糸满市字糸满606番地の2"
+      },
+      "tel": {
+        "label": "电话",
+        "value": "098-851-8266"
+      },
+      "fax": {
+        "label": "传真",
+        "value": "098-851-8268"
+      },
+      "email": {
+        "label": "电子邮箱",
+        "value": "info@nafs.okinawa"
+      }
+    },
+    "copyrightWithYear": "Copyright © 2017 - {year} 日琉国际语言学院"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "notFound": "页面未找到",
+    "backToHome": "返回首页",
+    "readMore": "阅读更多",
+    "submit": "提交",
+    "cancel": "取消",
+    "underConstruction": "页面建设中",
+    "comingSoon": "即将推出"
+  },
+  "errors": {
+    "pageNotFound": "您查找的页面不存在或已被移动。",
+    "serverError": "服务器错误。请稍后再试。",
+    "formError": "请检查您的输入并重试。"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "从冲绳到世界，从世界到冲绳"
+    },
+    "features": [
+      {
+        "title": "理念方针",
+        "description": "重视'学习',实现'能力'",
+        "image": "/images/features/philosophy.svg",
+        "alt": "理念方针图像"
+      },
+      {
+        "title": "课程介绍",
+        "description": "升学1年6个月课程,升学2年课程",
+        "image": "/images/features/course.svg",
+        "alt": "课程介绍图像"
+      },
+      {
+        "title": "自然的日语",
+        "description": "什么是自然的日语",
+        "image": "/images/features/natural-japanese.svg",
+        "alt": "自然日语图像"
+      }
+    ],
+    "admission": {
+      "title": "入学指南",
+      "visa": {
+        "title": "关于'留学'在留资格",
+        "description": "居住在海外并申请升学1年6个月课程或升学2年课程的学生需要申请'留学'在留资格（中长期在留资格）。1年6个月课程的入学时间为每年10月,2年课程为每年4月。建议提前半年准备各种留学资料。"
+      },
+      "residents": {
+        "title": "关于在日本居住的人",
+        "description": "不需要新申请'留学'在留资格的人包括已在日本持有'留学'在留资格的人，或持有其他在日本的在留资格（例如：投资经营、家族滞在、其他在留资格）的人。关于入学时间和咨询，您可以随时联系学校。"
+      }
+    },
+    "news": {
+      "title": "学校最新消息",
+      "description": "请查看学校的最新消息♪",
+      "items": [
+        {
+          "title": "2021年 年终派对",
+          "description": "大家好(*^▽^*)12月17日是今年的...",
+          "alt": "年终派对",
+          "image": "/images/home/sample.jpg"
+        },
+        {
+          "title": "糸满市町端区 定期清扫活动",
+          "description": "大家好(*^▽^*)本月25日...",
+          "alt": "清扫活动",
+          "image": "/images/home/sample.jpg"
+        },
+        {
+          "title": "2021年度 第二次日语能力考试",
+          "description": "大家好(*^▽^*)12月5日...",
+          "alt": "日语能力考试",
+          "image": "/images/home/sample.jpg"
+        }
+      ]
+    },
+    "readMore": "了解更多",
+    "staff": {
+      "title": "教职员介绍",
+      "subtitle": "经验丰富的教职员将支持您的日语学习"
+    },
+    "video": {
+      "title": "学校介绍视频",
+      "subtitle": "请观看日琉国际语言学院的学习生活"
+    },
+    "dragonboat": {
+      "description1": "学校所在地糸满市与中国有着悠久的历史，与中国一样，每年都会举办糸满哈利（龙舟比赛）。我们将努力使学生能够积极参与这一传统活动。我们认为这项活动是教育活动的重要部分，旨在传承传统文化，培养学生的团队精神和体育精神。",
+      "description2": "糸满哈利不仅是一项体育活动，还是文化遗产和友谊的象征。通过这项活动，我们学校希望学生能够体验当地文化。"
+    }
+  },
+  "courses": {
+    "hero": {
+      "title": "课程",
+      "breadcrumb": "课程指南"
+    },
+    "intro": {
+      "title": "课程介绍",
+      "description": "本校提供针对日本专门学校、大学、研究生院升学的课程和私人教学。私人教学可以根据学生需求自由调整课时。"
+    },
+    "courseList": [
+      {
+        "id": "advanced-2year",
+        "title": "升学2年课程",
+        "description": "从初级开始认真学习，可以从日语基础到应用慢慢学习。",
+        "details": "从初级开始扎实学习，目标成为日语精通者。"
+      },
+      {
+        "id": "advanced-1.5year",
+        "title": "升学1年6个月课程",
+        "description": "适合希望在短期内达到高级水平的人的课程。",
+        "details": "从初级开始扎实学习，目标成为日语精通者。"
+      },
+      {
+        "id": "private",
+        "title": "私人教学",
+        "description": "可以按照自己的节奏自由学习日语。",
+        "details": "可以按照自己的节奏自由学习日语。"
+      }
+    ],
+    "contact": {
+      "title": "想了解更多关于课程的信息",
+      "description": "关于各课程的详细信息和入学手续，请随时联系我们。",
+      "button": "联系我们"
+    },
+    "readMore": "了解更多"
+  },
+  "news": {
+    "hero": {
+      "title": "最新消息",
+      "breadcrumb": "新闻"
+    },
+    "pageTitle": "学校最新消息",
+    "pageDescription": "获取日琉国际语言学院的最新信息。",
+    "errorMessage": "获取文章时发生错误",
+    "loadingMessage": "加载文章中...",
+    "noArticlesMessage": "没有找到文章",
+    "readMore": "阅读更多",
+    "backToNewsList": "返回文章列表",
+    "publishedOn": "发布日期: {date}"
+  },
+  "languageSelector": {
+    "label": "选择语言",
+    "japanese": "日语",
+    "english": "英语",
+    "chinese": "中文"
+  },
+  "admin": {
+    "login": {
+      "title": "管理员登录",
+      "logoAlt": "日琉国际语言学院",
+      "username": "用户名",
+      "password": "密码",
+      "passwordLabel": "密码",
+      "submit": "登录",
+      "loggingIn": "登录中...",
+      "error": "登录失败。请检查您的用户名和密码。",
+      "errors": {
+        "failed": "登录失败",
+        "server": "服务器错误"
+      }
+    },
+    "posts": {
+      "new": {
+        "title": "创建新文章"
+      },
+      "edit": {
+        "title": "编辑文章"
+      },
+      "form": {
+        "titleLabel": "标题",
+        "contentLabel": "内容",
+        "saveButton": "保存",
+        "saving": "保存中...",
+        "errorMessage": "发生错误。请重试。",
+        "successMessage": "文章保存成功",
+        "previewToggle": "预览",
+        "backToList": "返回文章列表",
+        "thumbnailLabel": "缩略图",
+        "thumbnailHint": "点击上传图片",
+        "publishedLabel": "发布",
+        "draftSaved": "草稿已保存"
+      }
+    }
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "message": "您查找的页面不存在或已被移动。",
+    "backToHome": "返回首页"
+  },
+  "error": {
+    "title": "发生错误",
+    "message": "抱歉，您的请求出现问题。",
+    "tryAgain": "重试",
+    "backToHome": "返回首页"
+  }
+}

@@ -1,54 +1,69 @@
 import { NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 import { cookies } from 'next/headers'
+import { writeFile } from 'fs/promises'
+import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import fs from 'fs'
+
+// 認証チェック
+const checkAuth = async () => {
+  const cookieStore = await cookies()
+  const authCookie = cookieStore.get('admin_auth')
+  return authCookie && authCookie.value === 'authenticated'
+}
 
 export async function POST(request: Request) {
   try {
     // 認証チェック
-    const cookieStore = await cookies()
-    const authToken = cookieStore.get('auth_token')
-    
-    if (!authToken || authToken.value !== process.env.ADMIN_TOKEN) {
-      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 })
+    if (!(await checkAuth())) {
+      return NextResponse.json(
+        { error: '認証が必要です' },
+        { status: 401 }
+      )
     }
-
+    
     const formData = await request.formData()
     const file = formData.get('file') as File
     
     if (!file) {
-      return NextResponse.json({ error: 'ファイルが見つかりません' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'ファイルが見つかりません' },
+        { status: 400 }
+      )
     }
-
-    // ファイルタイプをチェック
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-    if (!validTypes.includes(file.type)) {
-      return NextResponse.json({ error: '無効なファイル形式です' }, { status: 400 })
+    
+    // ファイルタイプの確認
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json(
+        { error: '画像ファイルのみアップロードできます' },
+        { status: 400 }
+      )
     }
-
-    // ファイル名を生成
-    const buffer = await file.arrayBuffer()
-    const uniqueId = uuidv4()
-    const extension = file.name.split('.').pop()
-    const fileName = `${uniqueId}.${extension}`
     
-    // アップロードディレクトリを作成
-    const uploadDir = join(process.cwd(), 'public/uploads')
+    // アップロードディレクトリの作成
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads')
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true })
+    }
     
-    // ファイルを保存
-    await writeFile(
-      join(uploadDir, fileName),
-      Buffer.from(buffer)
-    )
-
-    // 保存したファイルのURLを返す
-    return NextResponse.json({ 
-      url: `/uploads/${fileName}`,
-      success: true 
-    })
+    // ファイル名の生成
+    const fileExtension = path.extname(file.name)
+    const fileName = `${uuidv4()}${fileExtension}`
+    const filePath = path.join(uploadDir, fileName)
+    
+    // ファイルの保存
+    const buffer = Buffer.from(await file.arrayBuffer())
+    await writeFile(filePath, buffer)
+    
+    // URLの生成
+    const fileUrl = `/uploads/${fileName}`
+    
+    return NextResponse.json({ url: fileUrl })
   } catch (error) {
     console.error('Error uploading file:', error)
-    return NextResponse.json({ error: 'ファイルのアップロードに失敗しました' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'ファイルのアップロード中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 } 

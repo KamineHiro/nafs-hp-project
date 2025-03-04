@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "courses": "コース",
+    "about": "学校について",
+    "news": "最新記事",
+    "downloads": "書類ダウンロード",
+    "contact": "お問い合わせ"
+  },
+  "footer": {
+    "copyright": "© 2023 NAFS. All rights reserved.",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "English"
+  }
+} 

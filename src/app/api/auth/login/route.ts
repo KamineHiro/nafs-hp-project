@@ -1,56 +1,40 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
-export async function POST(request: Request) {
+// 環境変数からパスワードを取得（デフォルト値としてフォールバック）
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'
+
+export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json()
-    
-    // 環境変数からパスワードを取得
-    const adminPassword = process.env.ADMIN_PASSWORD
-    
-    console.log('環境変数チェック:', { 
-      hasAdminPassword: !!adminPassword,
-      hasAdminToken: !!process.env.ADMIN_TOKEN,
-      passwordMatch: password === adminPassword
-    }) // デバッグ用（本番環境では削除）
-    
-    if (!adminPassword) {
-      return NextResponse.json({ 
-        success: false, 
-        message: '管理者パスワードが設定されていません' 
-      }, { status: 500 })
+    const body = await request.json()
+    const { password } = body
+
+    if (password === ADMIN_PASSWORD) {
+      // 認証成功
+      const token = Math.random().toString(36).substring(2, 15)
+      
+      // クッキーにセッショントークンを保存
+      const cookieStore = await cookies()
+      cookieStore.set('session', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7, // 1週間
+        path: '/',
+      })
+      
+      return NextResponse.json({ success: true })
+    } else {
+      // 認証失敗
+      return NextResponse.json(
+        { message: 'パスワードが正しくありません' },
+        { status: 401 }
+      )
     }
-    
-    if (password !== adminPassword) {
-      return NextResponse.json({ 
-        success: false, 
-        message: 'パスワードが正しくありません' 
-      }, { status: 401 })
-    }
-    
-    // 認証トークンをクッキーに設定
-    const cookieStore = await cookies()
-    
-    if (!process.env.ADMIN_TOKEN) {
-      return NextResponse.json({ 
-        success: false, 
-        message: '管理者トークンが設定されていません' 
-      }, { status: 500 })
-    }
-    
-    cookieStore.set('auth_token', process.env.ADMIN_TOKEN, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 24時間
-      path: '/',
-    })
-    
-    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('ログインエラー:', error)
-    return NextResponse.json({ 
-      success: false, 
-      message: 'サーバーエラーが発生しました' 
-    }, { status: 500 })
+    console.error('Login error:', error)
+    return NextResponse.json(
+      { message: 'ログイン処理中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 } 

@@ -1,3 +1,5 @@
+import createMiddleware from 'next-intl/middleware';
+import {locales, defaultLocale} from '@/lib/i18n';
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -19,8 +21,8 @@ function basicAuth(req: NextRequest) {
   return null
 }
 
-// サイト全体を保護
-export function middleware(request: NextRequest) {
+// 管理者認証ミドルウェア
+function authMiddleware(request: NextRequest) {
   // 管理者ページへのアクセスをチェック
   if (request.nextUrl.pathname.startsWith('/admin') && 
       !request.nextUrl.pathname.includes('/login')) {
@@ -33,13 +35,32 @@ export function middleware(request: NextRequest) {
     }
   }
   
-  return NextResponse.next()
+  return null
+}
+
+// 国際化ミドルウェア
+const intlMiddleware = createMiddleware({
+  locales: ['ja', 'en'],
+  defaultLocale: 'ja',
+  localePrefix: 'always'
+});
+
+// 統合ミドルウェア
+export function middleware(request: NextRequest) {
+  // 管理者認証を先に実行
+  const authResponse = authMiddleware(request)
+  if (authResponse) return authResponse
+  
+  // 管理者ページは国際化ミドルウェアをスキップ
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    return NextResponse.next()
+  }
+  
+  // 国際化ミドルウェアを実行
+  return intlMiddleware(request)
 }
 
 // ミドルウェアを適用するパスを指定
 export const config = {
-  matcher: [
-    // 保護したいパスを指定
-    '/admin/:path*',
-  ],
-} 
+  matcher: ['/((?!api|_next|.*\\..*).*)']
+}; 

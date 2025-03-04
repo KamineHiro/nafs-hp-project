@@ -1,129 +1,168 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { usePathname } from 'next/navigation'
+import { useState, useCallback } from "react"
+import { usePathname } from "next/navigation"
+import { useTranslations, useLocale } from "next-intl"
+import { cn } from "@/lib/utils"
+import LanguageSelector from "../LanguageSelector/LanguageSelector"
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [hasScrolled, setHasScrolled] = useState(false)
-  const [backgroundColor, setBackgroundColor] = useState("transparent")
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setHasScrolled(window.scrollY > 10)
-      setBackgroundColor(window.scrollY > 10 ? "rgba(255, 255, 255, 0.9)" : "transparent")
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  const menuItems = [
-    { href: "/", label: "ホーム" },
-    { href: "/courses", label: "コース" },
-    { href: "/about", label: "学校について" },
-    { href: "/news", label: "最新記事" },
-    { href: "/downloads", label: "書類ダウンロード" },
-    { href: "/contact", label: "お問い合わせ" },
+  const locale = useLocale()
+  const t = useTranslations('nav')
+  
+  const navLinks = [
+    { href: `/${locale}`, label: t('home') },
+    { href: `/${locale}/courses`, label: t('courses') },
+    { href: `/${locale}/about`, label: t('about') },
+    { href: `/${locale}/news`, label: t('news') },
+    { href: `/${locale}/downloads`, label: t('downloads') },
+    { href: `/${locale}/contact`, label: t('contact') },
   ]
 
-  return (
-    <motion.nav
-      style={{ backgroundColor }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        hasScrolled ? "shadow-md backdrop-blur-md" : ""
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-20">
-          {/* ロゴ */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="relative w-14 h-14">
-              <Image
-                src="/images/logo.png"
-                alt="NAFS Logo"
-                fill
-                sizes="(max-width: 768px) 56px, 56px"
-                className="object-contain"
-              />
-            </div>
-            <span className={`text-2xl font-bold ${
-              hasScrolled ? "text-gray-800" : "text-white"
-            }`}>
-              NAFS
-            </span>
-          </Link>
+  // isActiveLinkをuseCallbackでメモ化
+  const isActiveLink = useCallback((href: string) => {
+    if (pathname === href) return true
+    if (href !== `/${locale}` && pathname?.startsWith(href)) return true
+    return false
+  }, [pathname, locale])
 
-          {/* デスクトップメニュー */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {menuItems.map((item) => (
+  // メニューの開閉をハンドル
+  const handleMenuToggle = useCallback(() => {
+    setIsMenuOpen(prev => !prev)
+  }, [])
+
+  // メニューを閉じる
+  const handleCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
+  }, [])
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-20">
+          {/* ロゴ */}
+          <Link href={`/${locale}`} className="flex items-center">
+            <Image
+              src="/images/logo.png"
+              alt="NAFS Logo"
+              width={150}
+              height={40}
+              className="h-10 w-auto"
+              priority // 優先的に読み込み
+            />
+          </Link>
+          
+          {/* デスクトップナビゲーション */}
+          <nav className="hidden md:flex items-center space-x-6">
+            {navLinks.map((link) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`relative group py-2 text-lg ${
-                  hasScrolled ? "text-gray-800" : "text-white"
-                } hover:text-[#FFD700] transition-colors ${
-                  pathname === item.href ? "text-[#FFD700]" : ""
-                }`}
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "text-sm font-medium transition-colors",
+                  isActiveLink(link.href)
+                    ? "text-blue-600"
+                    : "text-gray-700 hover:text-blue-600"
+                )}
               >
-                {item.label}
-                <span 
-                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-[#FFD700] transform origin-left transition-transform duration-300 ${
-                    pathname === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`} 
-                />
+                {link.label}
               </Link>
             ))}
+            
+            {/* 言語選択 */}
+            <LanguageSelector />
+            
+            {/* 管理者ページへのリンク */}
+            <Link
+              href={`/${locale}/admin`}
+              className="text-sm font-medium px-4 py-2 rounded-md transition-colors bg-blue-600 text-white hover:bg-blue-700"
+            >
+              {t('adminLogin')}
+            </Link>
+          </nav>
+          
+          {/* モバイルメニューボタン */}
+          <div className="md:hidden flex items-center">
+            <button
+              className="p-2 rounded-md text-gray-800 hover:bg-gray-100 transition-colors"
+              onClick={handleMenuToggle}
+              aria-label={isMenuOpen ? "メニューを閉じる" : "メニューを開く"}
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
-
-          {/* ハンバーガーメニューボタン */}
-          <button
-            className={`lg:hidden p-2 focus:outline-none ${
-              hasScrolled ? "text-gray-800" : "text-white"
-            }`}
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="メニュー"
-          >
-            {isOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-          </button>
         </div>
       </div>
 
       {/* モバイルメニュー */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.2 }}
-          className="lg:hidden absolute top-20 inset-x-0 bg-white shadow-lg"
-        >
-          <div className="container mx-auto px-4 py-4">
-            {menuItems.map((item) => (
+      <AnimatePresence mode="wait">
+        {isMenuOpen && (
+          <motion.div
+            className="md:hidden absolute top-20 inset-x-0 bg-white shadow-lg"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="container mx-auto px-4 py-4">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "block py-3 text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-4 rounded-lg transition-colors",
+                      isActiveLink(link.href) ? "bg-blue-50 text-blue-600" : ""
+                    )}
+                    onClick={handleCloseMenu}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+              
+              {/* 言語選択（モバイル） */}
               <motion.div
-                key={item.href}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: item.href === pathname ? 0.1 : item.href === "/courses" ? 0.2 : item.href === "/about" ? 0.3 : item.href === "/news" ? 0.4 : item.href === "/downloads" ? 0.5 : 0.6 }}
+                transition={{ delay: navLinks.length * 0.1 }}
+                className="mt-4 border-t pt-4"
+              >
+                <div className="px-4 py-2 text-sm text-gray-500">
+                  {t('selectLanguage')}
+                </div>
+                <LanguageSelector isMobile />
+              </motion.div>
+              
+              {/* 管理者ログイン（モバイル） */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (navLinks.length + 1) * 0.1 }}
+                className="mt-4"
               >
                 <Link
-                  href={item.href}
-                  className={`block py-3 text-gray-700 hover:text-primary-color hover:bg-gray-50 px-4 rounded-lg transition-colors ${
-                    pathname === item.href ? "bg-[#FFD700] text-black" : ""
-                  }`}
-                  onClick={() => setIsOpen(false)}
+                  href={`/${locale}/admin`}
+                  className="block py-3 text-white bg-blue-600 hover:bg-blue-700 px-4 rounded-lg transition-colors text-center"
+                  onClick={handleCloseMenu}
                 >
-                  {item.label}
+                  {t('adminLogin')}
                 </Link>
               </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      )}
-    </motion.nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   )
 }

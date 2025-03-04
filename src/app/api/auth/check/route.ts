@@ -1,24 +1,25 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
+import { checkAuth } from '@/lib/auth'
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies()
-    const authToken = cookieStore.get('auth_token')
+    const result = await checkAuth(request)
     
-    if (!authToken || authToken.value !== process.env.ADMIN_TOKEN) {
-      return NextResponse.json({ 
-        authenticated: false,
-        message: '認証に失敗しました'
-      }, { status: 401 })
+    if (result.isAuthenticated) {
+      return NextResponse.json({ isAuthenticated: true })
+    } else {
+      return NextResponse.json(
+        { message: '認証されていません' },
+        { status: 401 }
+      )
     }
-    
-    return NextResponse.json({ authenticated: true })
   } catch (error) {
-    console.error('認証チェックエラー:', error)
-    return NextResponse.json({ 
-      authenticated: false,
-      message: 'サーバーエラーが発生しました'
-    }, { status: 500 })
+    console.error('Auth check error:', error)
+    return NextResponse.json(
+      { message: '認証チェック中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 } 

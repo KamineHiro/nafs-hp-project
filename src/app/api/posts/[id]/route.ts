@@ -1,110 +1,150 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
-import { cookies } from 'next/headers'
 
-// ヘルパー関数
-const getDataDirectory = () => path.join(process.cwd(), 'src/data/posts')
-const getFilePath = (id: string) => path.join(getDataDirectory(), `${id}.json`)
+// データファイルのパス
+const dataFilePath = path.join(process.cwd(), 'data', 'posts.json')
 
-// 認証チェック
-const isAuthenticated = async () => {
-  const cookieStore = await cookies()
-  const authToken = cookieStore.get('auth_token')
-  return authToken && authToken.value === process.env.ADMIN_TOKEN
+// 記事データを読み込む関数
+const getPosts = () => {
+  try {
+    // ファイルが存在するか確認
+    if (!fs.existsSync(dataFilePath)) {
+      // ファイルが存在しない場合は空の配列を持つJSONファイルを作成
+      fs.writeFileSync(dataFilePath, JSON.stringify([], null, 2), 'utf8')
+      return []
+    }
+
+    const fileData = fs.readFileSync(dataFilePath, 'utf8')
+    try {
+      const parsedData = JSON.parse(fileData)
+      // データ形式をチェック
+      if (parsedData.posts && Array.isArray(parsedData.posts)) {
+        return parsedData.posts
+      } else if (Array.isArray(parsedData)) {
+        return parsedData
+      } else {
+        console.error('Invalid posts data format:', parsedData)
+        return []
+      }
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError)
+      return []
+    }
+  } catch (error) {
+    console.error('Error reading posts data:', error)
+    return []
+  }
 }
 
-// URLからIDを抽出するヘルパー関数
-const extractIdFromUrl = (request: NextRequest) => {
-  const { pathname } = request.nextUrl
-  const segments = pathname.split('/')
-  return segments[segments.length - 1] // 最後のセグメントがID
-}
+// パラメータの型定義
+type RouteParams = Promise<{ id: string }>;
 
 // 特定の記事を取得
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: Request,
+  { params }: { params: RouteParams }
+): Promise<Response> {
   try {
-    // URLからIDを抽出
-    const paramId = extractIdFromUrl(request)
-    const id = `post_${paramId}`
-    const filePath = getFilePath(id)
+    // paramsをawaitする
+    const { id } = await params;
     
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ error: '記事が見つかりません' }, { status: 404 })
+    const posts = getPosts()
+    const post = posts.find((p: { id: string }) => p.id === id)
+    
+    if (!post) {
+      return NextResponse.json(
+        { message: '記事が見つかりません' },
+        { status: 404 }
+      )
     }
-    
-    const fileContents = fs.readFileSync(filePath, 'utf8')
-    const post = JSON.parse(fileContents)
     
     return NextResponse.json(post)
   } catch (error) {
-    console.error('Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('Error fetching post:', error)
+    return NextResponse.json(
+      { message: '記事の取得中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 }
 
 // 記事を更新
-export async function PUT(request: NextRequest) {
+export async function PUT(
+  request: Request,
+  { params }: { params: RouteParams }
+): Promise<Response> {
   try {
-    // 認証チェック
-    if (!(await isAuthenticated())) {
-      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 })
+    // paramsをawaitする
+    const { id } = await params;
+    
+    const posts = getPosts()
+    const postIndex = posts.findIndex((p: { id: string }) => p.id === id)
+    
+    if (postIndex === -1) {
+      return NextResponse.json(
+        { message: '記事が見つかりません' },
+        { status: 404 }
+      )
     }
     
-    // URLからIDを抽出
-    const paramId = extractIdFromUrl(request)
-    const id = `post_${paramId}`
-    const filePath = getFilePath(id)
-    
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ error: '記事が見つかりません' }, { status: 404 })
+    const updatedData = await request.json()
+    // 必須フィールドの検証
+    if (!updatedData.title || !updatedData.content) {
+      return NextResponse.json(
+        { message: 'タイトルと内容は必須です' },
+        { status: 400 }
+      )
     }
     
-    const data = await request.json()
-    const post = {
-      id,
-      title: data.title,
-      content: data.content,
-      date: data.date || new Date().toISOString(),
-      tags: data.tags || [],
-      thumbnail: data.thumbnail || ''
+    // 既存の記事を更新
+    posts[postIndex] = {
+      ...posts[postIndex],
+      ...updatedData,
+      updatedAt: new Date().toISOString()
     }
     
-    fs.writeFileSync(filePath, JSON.stringify(post, null, 2))
+    // ファイルに書き込み - 配列形式で保存
+    fs.writeFileSync(dataFilePath, JSON.stringify(posts, null, 2))
     
-    return NextResponse.json({ success: true })
+    return NextResponse.json(posts[postIndex])
   } catch (error) {
-    console.error('Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('Error updating post:', error)
+    return NextResponse.json(
+      { message: '記事の更新中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 }
 
 // 記事を削除
-export async function DELETE(request: NextRequest) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: RouteParams }
+): Promise<Response> {
   try {
-    // 認証チェック
-    if (!(await isAuthenticated())) {
-      return NextResponse.json({ error: '認証に失敗しました' }, { status: 401 })
+    // paramsをawaitする
+    const { id } = await params;
+    
+    const posts = getPosts()
+    const updatedPosts = posts.filter((p: { id: string }) => p.id !== id)
+    
+    if (posts.length === updatedPosts.length) {
+      return NextResponse.json(
+        { message: '記事が見つかりません' },
+        { status: 404 }
+      )
     }
     
-    // URLからIDを抽出
-    const paramId = extractIdFromUrl(request)
-    let id = paramId
-    if (!id.startsWith('post_')) {
-      id = `post_${id}`
-    }
+    // ファイルに書き込み - 配列形式で保存
+    fs.writeFileSync(dataFilePath, JSON.stringify(updatedPosts, null, 2))
     
-    const filePath = getFilePath(id)
-    
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json({ error: '記事が見つかりません' }, { status: 404 })
-    }
-    
-    fs.unlinkSync(filePath)
-    
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ message: '記事が削除されました' })
   } catch (error) {
-    console.error('Error:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('Error deleting post:', error)
+    return NextResponse.json(
+      { message: '記事の削除中にエラーが発生しました' },
+      { status: 500 }
+    )
   }
 }

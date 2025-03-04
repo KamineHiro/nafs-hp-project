@@ -1,0 +1,261 @@
+{
+  "metadata": {
+    "siteName": "日琉国際言語学院",
+    "description": "沖縄県糸満市の日本語学校。充実した日本語教育と生活サポートを提供しています。"
+  },
+  "nav": {
+    "home": "ホーム",
+    "courses": "コース",
+    "admission": "入学案内",
+    "about": "学校紹介",
+    "contact": "お問い合わせ",
+    "selectLanguage": "言語を選択",
+    "downloads": "ダウンロード",
+    "news": "ニュース",
+    "adminLogin": "管理者ログイン"
+  },
+  "footer": {
+    "description": "日琉国際言語学院は、沖縄県糸満市にある日本語学校です。世界各国からの留学生に質の高い日本語教育と充実した学生生活を提供しています。",
+    "address": "〒901-0361 沖縄県糸満市糸満606",
+    "phone": "098-123-4567",
+    "email": "info@nafs.edu",
+    "copyright": "© 2024 日琉国際言語学院. All rights reserved.",
+    "quickLinks": "クイックリンク",
+    "home": "ホーム",
+    "courses": "コース",
+    "about": "学校について",
+    "news": "最新記事",
+    "downloads": "書類ダウンロード",
+    "contactUs": "お問い合わせ",
+    "contactButton": "お問い合わせはこちら",
+    "aboutSchool": {
+      "title": "日琉国際言語学院について",
+      "tagline": "日本最南端の日本語学校で自然な日本語を学ぶ",
+      "entity": "設置主体：株式会社 日琉国際言語学院（日本語教育機関）",
+      "director": "代表取締役：リ タンキ",
+      "philosophy": "学校理念：「学ぶ」を重んじ、「できる」を叶える"
+    },
+    "languages": {
+      "title": "その他言語"
+    },
+    "relatedLinks": {
+      "title": "関連リンク",
+      "about": "学校について",
+      "accreditation": "告示された日本語教育機関リスト"
+    },
+    "contact": {
+      "title": "連絡先",
+      "address": {
+        "label": "住所",
+        "value": "糸満市字糸満６０６番地の２"
+      },
+      "tel": {
+        "label": "TEL",
+        "value": "098-851-8266"
+      },
+      "fax": {
+        "label": "FAX",
+        "value": "098-851-8268"
+      },
+      "email": {
+        "label": "Email",
+        "value": "info@nafs.okinawa"
+      }
+    },
+    "copyrightWithYear": "Copyright © 2017 - {year} 日琉国際言語学院"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "notFound": "ページが見つかりません",
+    "backToHome": "ホームに戻る",
+    "readMore": "詳しく見る",
+    "submit": "送信",
+    "cancel": "キャンセル",
+    "underConstruction": "ページ作成中",
+    "comingSoon": "近日公開"
+  },
+  "errors": {
+    "pageNotFound": "お探しのページは存在しないか、移動した可能性があります。",
+    "serverError": "サーバーエラーが発生しました。後でもう一度お試しください。",
+    "formError": "入力内容を確認して、もう一度お試しください。"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "沖縄から世界へ、世界から沖縄へ"
+    },
+    "features": [
+      {
+        "title": "理念方針",
+        "description": "「学ぶ」を重んじ、「できる」を叶える",
+        "image": "/images/features/philosophy.svg",
+        "alt": "理念方針のイメージ"
+      },
+      {
+        "title": "コース紹介",
+        "description": "進学1年6か月コース、進学2年コース",
+        "image": "/images/features/course.svg",
+        "alt": "コース紹介のイメージ"
+      },
+      {
+        "title": "自然な日本語",
+        "description": "自然な日本語というのは何でしょうか",
+        "image": "/images/features/natural-japanese.svg",
+        "alt": "自然な日本語のイメージ"
+      }
+    ],
+    "admission": {
+      "title": "入学案内",
+      "visa": {
+        "title": "在留資格「留学」について",
+        "description": "海外に居住しており、進学1年6か月コースまたは進学2年コースを申請する学生は、在留資格「留学」（中長期在留資格）の申請が必要となります。1年6か月コースの入学時期は毎年10月、2年コースは毎年4月です。各種留学資料の準備は半年前から始めるのがお勧めです。"
+      },
+      "residents": {
+        "title": "日本在住の方について",
+        "description": "在留資格「留学」の新規申請が不要な方は、既に日本で在留資格「留学」を保持している方、あるいはその他日本での在留資格（例：投資・経営、家族滞在、その他の在留資格）を保持している方を指します。入学時期や問い合わせについては、いつでも学校に問い合わせることができます。"
+      }
+    },
+    "news": {
+      "title": "学校最新ニュース",
+      "description": "学校の最新ニュースをたくさん見てください♪",
+      "items": [
+        {
+          "title": "2021年 年末パーティー",
+          "description": "こんにちは、皆さんです(*^▽^*)12月17日は今年...",
+          "alt": "年末パーティー",
+          "image": "/images/home/sample.jpg"
+        },
+        {
+          "title": "糸満市町端区 定例清掃活動",
+          "description": "こんにちは、皆さんです(*^▽^*)今月の25日に...",
+          "alt": "清掃活動",
+          "image": "/images/home/sample.jpg"
+        },
+        {
+          "title": "2021年度 第2回日本語能力試験",
+          "description": "こんにちは、皆さんです(*^▽^*)12月5日に...",
+          "alt": "日本語能力試験",
+          "image": "/images/home/sample.jpg"
+        }
+      ]
+    },
+    "readMore": "詳しく見る",
+    "staff": {
+      "title": "教職員紹介",
+      "subtitle": "経験豊富な教職員が、あなたの日本語学習をサポートします"
+    },
+    "video": {
+      "title": "学校紹介ビデオ",
+      "subtitle": "日琉国際言語学院での学習生活をご覧ください"
+    },
+    "dragonboat": {
+      "description1": "学校の所在地糸満市は中国との長い歴史があり、中国と同様に毎年糸満ハーレー（ドラゴンボートレース）が開催されています。伝統的な行事に学生も積極的に参加できるよう努めてまいります。この活動は伝統文化を継承し、学生のチームワーク精神とスポーツマンシップを養うことを目的とした教育活動の重要な一部であると考えております。",
+      "description2": "糸満ハーレーは単なるスポーツイベントではなく、文化遺産であり、友情の象徴でもあります。当校は、この活動を通じて学生が地元の文化を体験できることを期待しております。"
+    }
+  },
+  "courses": {
+    "hero": {
+      "title": "コース",
+      "breadcrumb": "コース案内"
+    },
+    "intro": {
+      "title": "コース紹介",
+      "description": "本校には日本の専門学校、大学、大学院への進学を目指す進学コースとプライベートレッスンがございます。プライベートレッスンは学生の要望に合わせて授業時間を自由に調整できます。"
+    },
+    "courseList": [
+      {
+        "id": "advanced-2year",
+        "title": "進学2年コース",
+        "description": "初級から丁寧に学び、日本語の基礎から応用までじっくり学べます。",
+        "details": "初級からしっかり学び、日本語熟達者を目指します。"
+      },
+      {
+        "id": "advanced-1.5year",
+        "title": "進学1年6か月コース",
+        "description": "短期間で上級レベルを目指したい方向けのコースです。",
+        "details": "初級からしっかり学び、日本語熟達者を目指します。"
+      },
+      {
+        "id": "private",
+        "title": "プライベートレッスン",
+        "description": "自分のペースで自由に日本語を勉強することができます。",
+        "details": "自分のペースで自由に日本語を勉強することができます。"
+      }
+    ],
+    "contact": {
+      "title": "コースについて詳しく知りたい方へ",
+      "description": "各コースの詳細や入学手続きについて、お気軽にお問い合わせください。",
+      "button": "お問い合わせはこちら"
+    },
+    "readMore": "詳しく見る"
+  },
+  "news": {
+    "hero": {
+      "title": "最新記事",
+      "breadcrumb": "ニュース"
+    },
+    "pageTitle": "学校の最新ニュース",
+    "pageDescription": "日琉国際言語学院の最新情報をお届けします。",
+    "errorMessage": "記事の取得中にエラーが発生しました",
+    "loadingMessage": "記事を読み込み中...",
+    "noArticlesMessage": "記事がありません",
+    "readMore": "続きを読む",
+    "backToNewsList": "記事一覧に戻る",
+    "publishedOn": "公開日: {date}"
+  },
+  "languageSelector": {
+    "label": "言語を選択",
+    "japanese": "日本語",
+    "english": "英語",
+    "chinese": "中国語"
+  },
+  "admin": {
+    "login": {
+      "title": "管理者ログイン",
+      "logoAlt": "日琉国際言語学院",
+      "username": "ユーザー名",
+      "password": "パスワード",
+      "passwordLabel": "パスワード",
+      "submit": "ログイン",
+      "loggingIn": "ログイン中...",
+      "error": "ログインに失敗しました。ユーザー名とパスワードを確認してください。",
+      "errors": {
+        "failed": "ログインに失敗しました",
+        "server": "サーバーエラーが発生しました"
+      }
+    },
+    "posts": {
+      "new": {
+        "title": "新規記事作成"
+      },
+      "edit": {
+        "title": "記事を編集"
+      },
+      "form": {
+        "titleLabel": "タイトル",
+        "contentLabel": "内容",
+        "saveButton": "保存する",
+        "saving": "保存中...",
+        "errorMessage": "エラーが発生しました。もう一度お試しください。",
+        "successMessage": "記事を保存しました",
+        "previewToggle": "プレビュー",
+        "backToList": "記事一覧に戻る",
+        "thumbnailLabel": "サムネイル画像",
+        "thumbnailHint": "クリックして画像をアップロード",
+        "publishedLabel": "公開する",
+        "draftSaved": "下書きを保存しました"
+      }
+    }
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "message": "お探しのページは存在しないか、移動した可能性があります。",
+    "backToHome": "ホームに戻る"
+  },
+  "error": {
+    "title": "エラーが発生しました",
+    "message": "申し訳ありませんが、問題が発生しました。",
+    "tryAgain": "再試行する",
+    "backToHome": "ホームに戻る"
+  }
+}
