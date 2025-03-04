@@ -25,12 +25,12 @@ const config = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self';
-              img-src 'self' data: blob: https:;
-              style-src 'self' 'unsafe-inline' https:;
-              script-src 'self' 'unsafe-eval' 'unsafe-inline' https:;
-              font-src 'self' https: data:;
-              connect-src 'self' https:;
-              frame-src 'self' https://www.youtube.com;
+              img-src 'self' data: blob: https: *.google.com *.googleapis.com *.gstatic.com;
+              style-src 'self' 'unsafe-inline' https: *.googleapis.com;
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https: *.google.com *.googleapis.com *.gstatic.com;
+              font-src 'self' https: data: *.gstatic.com;
+              connect-src 'self' https: *.google.com *.googleapis.com;
+              frame-src 'self' https://www.youtube.com https://www.google.com *.google.com;
             `.replace(/\s{2,}/g, ' ').trim()
           }
         ]

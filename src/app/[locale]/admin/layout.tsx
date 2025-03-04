@@ -200,14 +200,73 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  const params = useParams()
+  const pathname = usePathname()
+  const locale = params.locale as string || 'ja'
+
   return (
     <div className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <Providers>
-        <div className="admin-layout flex h-screen bg-gray-100">
-          <AdminSidebar />
-          <div className="flex-1 md:ml-64 p-6 overflow-auto">
-            <main className="mt-14 md:mt-0">
-              {children}
+        <div className="flex h-screen bg-gray-100">
+          {/* サイドバー */}
+          <div className="hidden md:flex md:flex-shrink-0">
+            <div className="flex flex-col w-64">
+              <div className="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r">
+                <div className="flex flex-col flex-grow">
+                  <nav className="flex-1 px-2 pb-4 space-y-1">
+                    <Link
+                      href={`/${locale}`}
+                      className="flex items-center px-4 py-3 text-base font-medium rounded-md text-gray-300 hover:bg-gray-700"
+                    >
+                      <ArrowLeft className="mr-3 h-5 w-5" />
+                      {menuLabels.backToSite}
+                    </Link>
+                    
+                    <Link
+                      href={`/${locale}/admin/posts`}
+                      className={`flex items-center px-4 py-3 text-base font-medium rounded-md ${
+                        pathname === `/${locale}/admin/posts`
+                          ? 'bg-gray-800 text-white'
+                          : 'text-gray-300 hover:bg-gray-700'
+                      }`}
+                    >
+                      <FileText className="mr-3 h-5 w-5" />
+                      {menuLabels.posts}
+                    </Link>
+                    
+                    <Link
+                      href={`/${locale}/admin/posts/new`}
+                      className={`flex items-center px-4 py-3 text-base font-medium rounded-md ${
+                        pathname === `/${locale}/admin/posts/new`
+                          ? 'bg-gray-800 text-white'
+                          : 'text-gray-300 hover:bg-gray-700'
+                      }`}
+                    >
+                      <PlusCircle className="mr-3 h-5 w-5" />
+                      {menuLabels.newPost}
+                    </Link>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* メインコンテンツエリア */}
+          <div className="flex flex-col flex-1 overflow-hidden">
+            {/* ヘッダー */}
+            <div className="fixed top-0 left-0 right-0 z-10">
+              <header className="bg-white shadow-sm">
+                {/* ... existing header content ... */}
+              </header>
+            </div>
+
+            {/* メインコンテンツ */}
+            <main className="flex-1 relative overflow-y-auto focus:outline-none pt-16">
+              <div className="py-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+                  {children}
+                </div>
+              </div>
             </main>
           </div>
         </div>
